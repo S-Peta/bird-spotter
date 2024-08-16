@@ -7,5 +7,4 @@ export async function getUsers(db:any, collectionName:string) {
       return doc.data()
     })
     return usersList
-
   }
