@@ -4,7 +4,7 @@ import * as fs from "fs";
 import { snapshot } from "node:test";
 import path from "path";
 
-const birdImagesDir = "./assets/test";
+const birdImagesDir = "./assets/bird-species-images";
 
 fs.readdir(birdImagesDir, (err, files) => {
   files.forEach((file) => {

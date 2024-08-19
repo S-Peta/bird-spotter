@@ -3,6 +3,16 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
+  apiKey: "AIzaSyA9ySyi3QPJwmgtB9xG8fdzFP0U2LP6Pt8",
+  authDomain: "birdspotter-db.firebaseapp.com",
+  projectId: "birdspotter-db",
+  storageBucket: "birdspotter-db.appspot.com",
+  messagingSenderId: "1055905898244",
+  appId: "1:1055905898244:web:f5be6d18b3f91287bffa51",
+  measurementId: "G-179352B53B",
+};
+
+const testFirebaseConfig = {
   apiKey: "AIzaSyBliqaTr0GYn7Hyg26uqDg3DP1Q8frm0I4",
   authDomain: "testbirdspotter-db.firebaseapp.com",
   projectId: "testbirdspotter-db",
