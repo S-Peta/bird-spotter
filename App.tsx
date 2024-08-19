@@ -1,26 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import {db} from "./index"
-import { getUsers } from './utils/getData';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import Login from './Components/Login';
+import { useEffect, useState } from 'react';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { firebase_auth } from './index';
+import FirstPage from './Components/FirstPage';
 
-export default function App() {
-  getUsers(db, 'Users')
-  .then((data) => {
-    console.log(data)
-  })
+const Stack = createNativeStackNavigator()
+const InsideStack = createNativeStackNavigator()
+
+function InsideLayout() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <InsideStack.Navigator>
+      <InsideStack.Screen name='Inside' component={FirstPage}/>
+    </InsideStack.Navigator>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    onAuthStateChanged(firebase_auth, (user) => {
+      console.log('user', user);
+      setUser(user)
+    })
+  })
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName='Login'>
+        {user ? (
+          <Stack.Screen name='Inside' component={InsideLayout} options={{headerShown: true}} />
+        ) : (
+          <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/>
+        )}
+
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
