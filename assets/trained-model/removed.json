@@ -1,0 +1,13 @@
+{
+    "class_name": "Normalization",
+    "config": {
+      "name": "normalization",
+      "trainable": true,
+      "dtype": "float32",
+      "axis": [3],
+      "mean": [0.485, 0.456, 0.406],
+      "variance": [0.052441, 0.050176000000000005, 0.050625]
+    },
+    "name": "normalization",
+    "inbound_nodes": [[["rescaling", 0, 0, {}]]]
+  },
