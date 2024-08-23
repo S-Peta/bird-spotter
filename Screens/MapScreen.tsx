@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Alert } from 'react-native'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import MapView from 'react-native-maps';
-import { getCaughtBirds } from '../utils/getData';
+import { getCaughtAllBirds } from '../utils/getData';
 import CustomMarker from '../Components/CustomMarker';
 import CaughtBirdMapCard from '../Components/CaughtBirdMapCard';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
@@ -36,7 +36,7 @@ export default function MapScreen() {
 
   useEffect(() => {
     const fetchCaughtBirds = async () => {
-      const caughtBirdsList = await getCaughtBirds();
+      const caughtBirdsList = await getCaughtAllBirds();
       setCaughtBirds(caughtBirdsList);
     };
     fetchCaughtBirds();

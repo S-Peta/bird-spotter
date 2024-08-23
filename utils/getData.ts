@@ -20,6 +20,15 @@ export async function getCaughtBirds(userID:string) {
   return caughtBirdsList
 }
 
+export async function getCaughtAllBirds() {
+  const caughtBirdsCol = collection(db, 'Caught Birds')
+  const caughtBirdsSnapshot = await getDocs(caughtBirdsCol)
+  const caughtBirdsList = caughtBirdsSnapshot.docs.map((doc) => {
+    return doc.data()
+  })
+  return caughtBirdsList
+}
+
 export async function getCaughtBirdSpecies(userID:string) {
   const caughtBirdsCol = collection(db, 'Caught Birds')
   const caughtBirdsQuery = query(caughtBirdsCol, where('user_id', '==', userID))
@@ -61,7 +70,7 @@ export async function getPointsForUser(userID:string) {
 }
 
 export async function getBirdsImageUrls(speciesName:string[]) {
-  const urls = [] 
+  const urls = []
   for (const species of speciesName){
     try {
       const imageRef = ref(storage, `assets/bird-species-images/${species}/2.jpg`)
@@ -73,4 +82,3 @@ export async function getBirdsImageUrls(speciesName:string[]) {
   }
  return urls
 }
-
