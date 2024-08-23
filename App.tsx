@@ -8,8 +8,10 @@ import Tabs from "./navigation/Tabs";
 import LoginScreen from "./Screens/LoginScreen";
 import RankingScreen from "./Screens/RankingScreen";
 import CaughtBirdsScreen from "./Screens/CaughtBirdsScreen";
+import SingleBirdScreen from "./Screens/SingleBirdScreen";
+import { RootStackParamList } from "./types";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 const InsideStack = createNativeStackNavigator();
 
 // function InsideLayout() {
@@ -35,7 +37,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Login">
         {user ? (
           <Stack.Screen
-            name="Tabs"
+            name="Main"
             component={Tabs}
             options={{ headerShown: false }}
           />
@@ -47,7 +49,8 @@ export default function App() {
           />
         )}
         <Stack.Screen name="Ranking" component={RankingScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name="Caught Birds" component={CaughtBirdsScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="Caught Birds" component={CaughtBirdsScreen}/>
+        <Stack.Screen name="Single Bird" component={SingleBirdScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
