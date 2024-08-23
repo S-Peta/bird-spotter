@@ -82,6 +82,8 @@ export default function Tabs() {
             },
           }}
         />
+
+
         {/* <Tab.Screen name="User Profile" component={UserProfileScreen} /> */}
       </Tab.Navigator>
     </PointsProvider>
