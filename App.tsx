@@ -8,8 +8,10 @@ import Tabs from "./navigation/Tabs";
 import LoginScreen from "./Screens/LoginScreen";
 import RankingScreen from "./Screens/RankingScreen";
 import CaughtBirdsScreen from "./Screens/CaughtBirdsScreen";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SingleBirdScreen from "./Screens/SingleBirdScreen";
 import { RootStackParamList } from "./types";
+
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const InsideStack = createNativeStackNavigator();
@@ -32,6 +34,9 @@ export default function App() {
   }, []);
 
   return (
+
+
+  <GestureHandlerRootView style={{ flex: 1 }}>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         {user ? (
@@ -60,5 +65,6 @@ export default function App() {
         /> */}
       </Stack.Navigator>
     </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
