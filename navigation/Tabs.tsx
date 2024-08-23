@@ -11,7 +11,7 @@ export default function Tabs() {
   return (
     <PointsProvider>
       <Tab.Navigator>
-        <Tab.Screen name="User Profile" component={UserProfileScreen} options={{ headerShown: false }} /> 
+        <Tab.Screen name="Profile" component={UserProfileScreen}/> 
         <Tab.Screen name="Map" component={MapScreen} />
         <Tab.Screen name="Camera" component={CameraScreen} />
         {/* <Tab.Screen name="User Profile" component={UserProfileScreen} /> */}
