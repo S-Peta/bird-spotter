@@ -40,7 +40,7 @@ const UserProfileScreen = () => {
       })
     }
   }, [])
-  
+
 
   const progress = totalCaughtBirds / totalBirds
 
@@ -57,12 +57,12 @@ const UserProfileScreen = () => {
       <Link to={{screen: 'Caught Birds', params: {totalCaughtBirds, totalBirds, userId: user?.uid, progress}}} style={styles.link}>
         <Text style={styles.button}>Your Caught Birds</Text>
       </Link>
-     <Pressable style={styles.logoutButton} onPress={LogOut}>
+      <Pressable style={styles.logoutButton} onPress={LogOut}>
         <Text style={styles.logoutButtonText}>Log out</Text>
       </Pressable>
-    
+
     </View>
-  
+
   )
 }
 const styles = StyleSheet.create({
@@ -136,4 +136,3 @@ const styles = StyleSheet.create({
 });
 
 export default UserProfileScreen
-
