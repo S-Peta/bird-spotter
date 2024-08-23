@@ -35,7 +35,6 @@
     "react-native-screens": "3.31.1",
     "react-native-svg-transformer": "^1.5.0",
     "react-native-tensorflow": "^0.1.8",
-    "react-native-progress": "^5.0.1",
     "react-native-web": "~0.19.12",
     "react-native-webview": "^13.8.6",
     "expo-location": "~17.0.1"
