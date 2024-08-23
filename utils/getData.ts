@@ -74,8 +74,3 @@ export async function getBirdsImageUrls(speciesName:string[]) {
  return urls
 }
 
-// http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Black and yellow broadbill&format=json
-// // .query --> .search[0].title & .pageid
-
-// http://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro&titles=BLACK%20francolin&format=json
-// // .query.pages.[pageid].extract

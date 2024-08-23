@@ -10,6 +10,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { View, Text } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
+import SingleBirdScreen from "../Screens/SingleBirdScreen";
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -42,9 +44,10 @@ export default function Tabs() {
         >
           {() => (
             <Stack.Navigator>
-              <Stack.Screen name="Home" component={UserProfileScreen} />
+              <Stack.Screen name="User Profile" component={UserProfileScreen} />
               <Stack.Screen name="Ranking" component={RankingScreen} />
               <Stack.Screen name="Caught Birds" component={CaughtBirdsScreen} />
+              <Stack.Screen name="Single Bird" component={SingleBirdScreen}/>
             </Stack.Navigator>
           )}
         </Tab.Screen>
@@ -75,7 +78,7 @@ export default function Tabs() {
                 <View
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
-                  <AntDesign name="camerao" size={24} color="black" />{" "}
+                  <AntDesign name="camera" size={24} color="black" />
                   <Text style={{ fontSize: 12, color: "#162478" }}>Camera</Text>
                 </View>
               );

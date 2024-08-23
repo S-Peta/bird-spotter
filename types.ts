@@ -9,18 +9,10 @@ export type RootStackParamList = {
     };
     "Single Bird": {
         species: string;
+        url: string;
     };
     "Login": undefined;
     "Main": undefined;
     "Ranking": undefined;
 };
 
-
-
-// export type UserProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Caught Birds">
-// export type RootStackParamList = {
-//     "Caught Birds": {
-//         totalBirds: number,
-//         totalCaughtBirds: number
-//     }
-// }
