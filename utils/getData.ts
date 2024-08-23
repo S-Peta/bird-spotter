@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, getDoc} from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, limit, startAfter, query, where} from 'firebase/firestore';
 import { db, storage } from '../index';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 export async function getUsers() {
@@ -10,22 +10,47 @@ export async function getUsers() {
   return usersList
 }
 
-export async function getCaughtBirds() {
-  const caugthBirdsCol = collection(db, 'Caught Birds')
-  const caugthBirdsSnapshot = await getDocs(caugthBirdsCol)
-  const caugthBirdsList = caugthBirdsSnapshot.docs.map((doc) => {
+export async function getCaughtBirds(userID:string) {
+  const caughtBirdsCol = collection(db, 'Caught Birds')
+  const caughtBirdsQuery = query(caughtBirdsCol, where('user_id', '==', userID))
+  const caughtBirdsSnapshot = await getDocs(caughtBirdsQuery)
+  const caughtBirdsList = caughtBirdsSnapshot.docs.map((doc) => {
     return doc.data()
   })
-  return caugthBirdsList
+  return caughtBirdsList
 }
 
-export async function getBirds() {
-  const birdsCol = collection(db, 'Bird_Species')
-  const birdsSnapshot = await getDocs(birdsCol)
+export async function getCaughtBirdSpecies(userID:string) {
+  const caughtBirdsCol = collection(db, 'Caught Birds')
+  const caughtBirdsQuery = query(caughtBirdsCol, where('user_id', '==', userID))
+  const caughtBirdsSnapshot = await getDocs(caughtBirdsQuery)
+  const caughtBirdsList = caughtBirdsSnapshot.docs.map((doc) => {
+    return doc.data()
+  })
+  const caughtBirdSpecies = caughtBirdsList.map((caughtBird) => {
+    return caughtBird.species
+  })
+  return  caughtBirdSpecies
+}
+
+export async function getBirds(resultsPerPage:number) {
+  const firstPage = query(collection(db, 'Bird_Species'), limit(resultsPerPage))
+  const birdsSnapshot = await getDocs(firstPage)
+  const lastVisible = birdsSnapshot.docs[birdsSnapshot.docs.length -1]
   const birdsList = birdsSnapshot.docs.map((doc) => {
     return doc.data()
   })
-  return birdsList
+  return {birdsList, lastVisible}
+}
+
+export async function getMoreBirds(startAft:{}, resultsPerPage:number) {
+  const firstPage = query(collection(db, 'Bird_Species'), startAfter(startAft),limit(resultsPerPage))
+  const birdsSnapshot = await getDocs(firstPage)
+  const lastVisible = birdsSnapshot.docs[birdsSnapshot.docs.length -1]
+  const birdsList = birdsSnapshot.docs.map((doc) => {
+    return doc.data()
+  })
+  return {birdsList, lastVisible}
 }
 
 export async function getPointsForUser(userID:string) {

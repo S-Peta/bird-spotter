@@ -10,4 +10,5 @@ module.exports = {
         ios: null, // Disable iOS platform if you're linking manually or using CocoaPods
         android: null, // Disable Android platform if linking manually
   }}
-};
+}
+}
