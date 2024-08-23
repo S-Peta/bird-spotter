@@ -32,7 +32,6 @@ export default function App() {
   }, []);
 
   return (
-
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         {user ? (
@@ -48,9 +47,17 @@ export default function App() {
             options={{ headerShown: false }}
           />
         )}
-        <Stack.Screen name="Ranking" component={RankingScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name="Caught Birds" component={CaughtBirdsScreen}/>
-        <Stack.Screen name="Single Bird" component={SingleBirdScreen}/>
+
+        {/* <Stack.Screen
+          name="Ranking"
+          component={RankingScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="Caught Birds"
+          component={CaughtBirdsScreen}
+          options={{ headerShown: false }}
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
