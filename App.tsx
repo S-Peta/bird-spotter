@@ -1,42 +1,60 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
-import Login from './Components/Login';
-import { useEffect, useState } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { firebase_auth } from './index';
-import FirstPage from './Components/FirstPage';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { firebase_auth } from "./index";
+import { Screen } from "react-native-screens";
+import Tabs from "./navigation/Tabs";
+import LoginScreen from "./Screens/LoginScreen";
+import RankingScreen from "./Screens/RankingScreen";
+import CaughtBirdsScreen from "./Screens/CaughtBirdsScreen";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import SingleBirdScreen from "./Screens/SingleBirdScreen";
+import { RootStackParamList } from "./types";
 
-const Stack = createNativeStackNavigator()
-const InsideStack = createNativeStackNavigator()
 
-function InsideLayout() {
-  return (
-    <InsideStack.Navigator>
-      <InsideStack.Screen name='Inside' component={FirstPage}/>
-    </InsideStack.Navigator>
-  )
-}
+const Stack = createNativeStackNavigator<RootStackParamList>();
+const InsideStack = createNativeStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
-
   useEffect(() => {
     onAuthStateChanged(firebase_auth, (user) => {
-      console.log('user', user);
-      setUser(user)
-    })
-  })
-
+      setUser(user);
+    });
+  }, []);
   return (
+
+
+  <GestureHandlerRootView style={{ flex: 1 }}>
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login'>
+      <Stack.Navigator initialRouteName="Login">
         {user ? (
-          <Stack.Screen name='Inside' component={InsideLayout} options={{headerShown: true}} />
+          <Stack.Screen
+            name="Main"
+            component={Tabs}
+            options={{ headerShown: false }}
+          />
         ) : (
-          <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/>
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
         )}
 
+        {/* <Stack.Screen
+          name="Ranking"
+          component={RankingScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="Caught Birds"
+          component={CaughtBirdsScreen}
+          options={{ headerShown: false }}
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
