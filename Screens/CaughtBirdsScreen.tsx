@@ -78,9 +78,8 @@ const CaughtBirdsScreen = ({ route }: { route: any }) => {
 
     setImageData([...imageData, ...imageObjects]);
   }
-  console.log(imageData);
-  function handlePress(species: string) {
-    navigation.navigate("Single Bird", { species });
+  function handlePress(species: string, url:string) {
+    navigation.navigate("Single Bird", { species, url });
   }
   if (isLoading) {
     return <ActivityIndicator style={{ marginVertical: 20 }} />;
@@ -94,7 +93,7 @@ const CaughtBirdsScreen = ({ route }: { route: any }) => {
       <FlatList
         data={imageData}
         renderItem={({ item }) => (
-          <Pressable onPress={() => handlePress(item.species)}>
+          <Pressable onPress={() => handlePress(item.species, item.url)}>
             <View style={styles.imageContainer}>
               <Image
                 source={{ uri: item.url }}

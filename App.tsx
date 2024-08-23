@@ -14,23 +14,13 @@ import { RootStackParamList } from "./types";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const InsideStack = createNativeStackNavigator();
 
-// function InsideLayout() {
-//   return (
-//     <InsideStack.Navigator>
-//       <InsideStack.Screen name='Inside' component={FirstPage}/>
-//     </InsideStack.Navigator>
-//   )
-// }
-
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
     onAuthStateChanged(firebase_auth, (user) => {
-      // console.log("user", user);
       setUser(user);
     });
   }, []);
-
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
