@@ -4,7 +4,7 @@ import React from 'react'
 const CameraScreen = () => {
   return (
     <View>
-      <Text>Camera</Text>
+      <Text>CameraScreen</Text>
     </View>
   )
 }

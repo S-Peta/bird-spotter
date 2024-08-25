@@ -48,6 +48,7 @@ export default function App() {
           component={RankingScreen}
           options={{ headerShown: true }}
         />
+
         <Stack.Screen
           name="Caught Birds"
           component={CaughtBirdsScreen}

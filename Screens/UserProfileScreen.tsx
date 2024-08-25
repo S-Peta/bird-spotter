@@ -1,173 +1,199 @@
-import { View, Text, Button, StyleSheet, Pressable, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, Button, StyleSheet, Pressable, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { firebase_auth } from '../index';
 import { signOut, getAuth } from "firebase/auth";
-import * as Progress from 'react-native-progress';
-import {getCaughtBirds, getCaughtBirdSpecies } from '../utils/getData';
-import { db } from '../index';
-import { doc, getDoc } from 'firebase/firestore';
-import { getPointsForUser } from '../utils/getData';
+import { getCaughtBirds, getPointsForUser } from '../utils/getData';
+import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 import { useContext } from 'react';
 import { PointsContext } from '../Contexts/Points';
-import { Link } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const UserProfileScreen = () => {
   const auth = firebase_auth;
   const userAuth = getAuth();
   const user = userAuth.currentUser;
-  const {points, setPoints} = useContext(PointsContext)
-  // const [points, setPoints] = useState(0)
-  if (user){
-  getPointsForUser(user.uid)
-  .then((userPoints) => {
-    setPoints(userPoints)
-  })
+  const navigation = useNavigation();
+  const { points, setPoints } = useContext(PointsContext);
+  const [totalCaughtBirds, setTotalCaughtBirds] = useState(0);
+
+  const defaultImageUri = 'https://www.momscleanairforce.org/wp-content/uploads/2020/11/birds_sky.jpg';
+  const defaultUser = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDJzEaxLN-jGRYYUO65pWu7Q9GXoNt4LUSSA&s';
+
+  if (user) {
+    getPointsForUser(user.uid).then((userPoints) => {
+      setPoints(userPoints);
+    });
   }
-  const [totalCaughtBirds, setTotalCaughtBirds] = useState(0)
+
   const LogOut = async () => {
     try {
-      await signOut(auth)
-    } catch (error: any) {
+      await signOut(auth);
+    } catch (error) {
       console.log(error);
-      alert('Sign Out failed' + error.message)
+      alert('Sign Out failed' + error.message);
     }
-  }
-  const totalBirds = 521
+  };
+
+  const goToRankingPage = () => {
+    navigation.navigate('Ranking');
+  };
+
+  const goToSettings = () => {
+    navigation.navigate('Settings');
+  };
+
+  const totalBirds = 521;
   useEffect(() => {
-    if(user){
+    if (user) {
       getCaughtBirds(user.uid).then((data) => {
-        setTotalCaughtBirds(data.length)
-      })
+        setTotalCaughtBirds(data.length);
+      });
     }
-  }, [])
+  }, []);
 
-
-  const progress = totalCaughtBirds / totalBirds
-  const defaultImageUri = 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.momscleanairforce.org%2Fwhy-are-birds-falling-from-the-sky%2F&psig=AOvVaw1zLug5whErn4frZLnVL5KX&ust=1724514272548000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJi1qcO6i4gDFQAAAAAdAAAAABAj'
+  const progress = totalCaughtBirds / totalBirds;
 
   return (
-    <SafeAreaView style={{
-      flex: 1,
-      backgroundColor: 'white'
-    }}>
-      <StatusBar backgroundColor='gray'/>
-      <View style={{width: '100%'}}>
+    <View>
+      <StatusBar backgroundColor='gray' />
+      <View style={styles.headerContainer}>
+        <Image source={{ uri: defaultImageUri }} resizeMode='cover' style={styles.headerImage} />
+        <TouchableOpacity style={styles.settingsIcon} onPress={goToSettings}>
+          <Icon name="settings-outline" size={30} color="white" />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.avatarContainer}>
         <Image
-        source={{ uri: defaultImageUri }}
-        resizeMode='cover'
-        style={{
-          height: 228,
-          width: '100%'
-        }}
+          source={{ uri: user?.avatar || defaultUser }}
+          resizeMode='contain'
+          style={styles.avatar}
         />
+        <Text style={styles.username}>{user?.username || 'Username'}</Text>
       </View>
 
-      <View style={{flex: 1, alignItems: 'center'}}>
-        <Image
-        source={{uri: user.avatar }}
-        resizeMode='contain'
-        style={{
-          height: 155,
-          width: 155,
-          borderRadius: 999,
-          borderColor: 'green',
-          marginTop: -90
-        }}/>
+      <Text style={styles.title}>Overview</Text>
+
+      <View style={styles.cardsContainer}>
+        <View style={styles.card}>
+          <Icon name="flame" size={30} color="orange" />
+          <Text>Overview 1</Text>
+        </View>
+        <View style={styles.card}>
+          <Icon name="flash" size={30} color="orange" />
+          <Text>Overview 2</Text>
+        </View>
       </View>
 
-      <Text></Text>
-    </SafeAreaView>
-  )
+      <View style={styles.bottomCardContainer}>
+        <TouchableOpacity style={styles.bottomCard} onPress={goToRankingPage}>
+          <Icon name="podium" size={30} color="orange"  style={styles.icon}/>
+          <Text>Check the ranking</Text>
+        </TouchableOpacity>
+      </View>
 
-  // return (
-  //   <View style={styles.container}>
-  //     <Text style={styles.headerText}>User Profile</Text>
-  //     <Text style={styles.text}>Your Progress</Text>
-  //     <Progress.Bar style={styles.progressBar} progress={progress} width={300} color="#4caf50"/>
-  //     <Text style={styles.progressText}>{totalCaughtBirds}/{totalBirds} birds caught</Text>
-  //     <Text style={styles.pointsText}>Total Points: {points}</Text>
-  //     <Link to={{screen: 'Ranking'}} style={styles.link}>
-  //       <Text style={styles.button}>View Rankings</Text>
-  //     </Link>
-  //     <Link to={{screen: 'Caught Birds', params: {totalCaughtBirds, totalBirds, userId: user?.uid, progress}}} style={styles.link}>
-  //       <Text style={styles.button}>Your Caught Birds</Text>
-  //     </Link>
-  //     <Pressable style={styles.logoutButton} onPress={LogOut}>
-  //       <Text style={styles.logoutButtonText}>Log out</Text>
-  //     </Pressable>
-  //   </View>
-  // )
-}
+      <Text style={styles.title}>Your most recent caught birds</Text>
+
+      <View style={styles.bottomCardContainer}>
+        <View style={styles.birdsCard}>
+          <View style={styles.birdsList}>
+            <Image style={styles.birdImage} source={{ uri: defaultImageUri }} />
+            <Image style={styles.birdImage} source={{ uri: defaultImageUri }} />
+            <Image style={styles.birdImage} source={{ uri: defaultImageUri }} />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    justifyContent: "center",
-    backgroundColor: "#f5f5f5",
+  headerContainer: {
+    position: 'relative',
+    width: '100%',
   },
-  headerText: {
-    fontSize: 24,
+  headerImage: {
+    height: 150,
+    width: '100%',
+  },
+  settingsIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    padding: 10,
+  },
+  avatarContainer: {
+    alignItems: 'center',
+    marginTop: -90,
+  },
+  avatar: {
+    height: 155,
+    width: 155,
+    borderRadius: 999,
+    borderColor: 'green',
+    borderWidth: 2,
+  },
+  username: {
+    marginTop: 10,
+    fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center',
+  },
+  title: {
+    // textAlign: 'center',
+    fontSize: 16,
+    marginBottom: 5,
+    marginTop: 25,
+    marginLeft: 40,
+    fontWeight: 'bold',
+  },
+  cardsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 30,
     marginBottom: 20,
-    color: "#333",
   },
-  text: {
-    fontSize: 18,
-    textAlign: "center",
-    marginBottom: 10,
-    color: "#555",
+  card: {
+    backgroundColor: '#dcdcdc',
+    width: 150,
+    height: 80,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  progressBar: {
-    alignSelf: "center",
-    marginBottom: 10,
+  bottomCardContainer: {
+    alignItems: 'center',
   },
-  progressText: {
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 20,
-    color: "#777",
+  bottomCard: {
+    backgroundColor: '#dcdcdc',
+    width: 315,
+    height: 80,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
-  pointsText: {
-    fontSize: 18,
-    textAlign: "center",
-    marginBottom: 30,
-    color: "#333",
-    fontWeight: "bold",
+  birdsCard: {
+    backgroundColor: '#dcdcdc',
+    width: 315,
+    height: 120,
+    borderRadius: 5,
+    justifyContent: 'center',
+    padding: 10,
   },
-  link: {
-    margin: 20,
-    alignItems: "center",
-    alignSelf: "center"
+  birdsList: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  button: {
-    backgroundColor: "#4caf50",
-    color: "#fff",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    textAlign: "center",
-    fontSize: 16,
-    fontWeight: "bold",
-    width: "80%",
-    alignSelf: "center",
+  birdImage: {
+    width: 90,
+    height: 90,
+    borderRadius: 5,
   },
-  logoutButton: {
-    backgroundColor: "#f44336",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    alignSelf: "center",
-    marginTop: 20,
-  },
-  logoutButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
+  icon: {
+    margin: 10,
+  }
 });
 
-export default UserProfileScreen
+export default UserProfileScreen;

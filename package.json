@@ -20,6 +20,7 @@
     "@tensorflow/tfjs-react-native": "^1.0.0",
     "axios": "^1.7.4",
     "expo": "~51.0.28",
+    "expo-location": "~17.0.1",
     "expo-status-bar": "~1.12.1",
     "express": "^4.19.2",
     "firebase": "^10.13.0",
@@ -35,14 +36,15 @@
     "react-native-screens": "3.31.1",
     "react-native-svg-transformer": "^1.5.0",
     "react-native-tensorflow": "^0.1.8",
+    "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.12",
-    "react-native-webview": "^13.8.6",
-    "expo-location": "~17.0.1"
+    "react-native-webview": "^13.8.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.45",
     "@types/react-native": "^0.73.0",
+    "@types/react-native-vector-icons": "^6.4.18",
     "metro-config": "^0.80.10",
     "react-native-cli": "^2.0.1",
     "typescript": "~5.3.3"
