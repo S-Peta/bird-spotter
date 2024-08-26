@@ -51,7 +51,7 @@ const CameraScreen = ({ navigation }) => {
               onPress={() => {
                 setModalVisible(!modalVisible);
                 navigation.navigate("Result Page", {
-                  predictedBird: "BLACK FRANCOLIN",
+                  predictedBird: prediction,
                 });
                 updateUserTwentyPoints();
               }}
