@@ -81,7 +81,7 @@ export default function LoginScreen() {
       } else if (error.code === 'auth/missing-email') {
         setErrorMessage('Please provide an email')
       } else {
-       setErrorMessage("Sign Up failed: " + error.message);
+        setErrorMessage("Sign Up failed: " + error.message);
       }
     } finally {
       setLoading(false);
