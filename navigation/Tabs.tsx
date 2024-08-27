@@ -1,3 +1,4 @@
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MapScreen from "../Screens/MapScreen";
 import CameraScreen from "../Screens/CameraScreen";
@@ -11,10 +12,13 @@ import { View, Text } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import SingleBirdScreen from "../Screens/SingleBirdScreen";
-
+import GuessPage from "../Screens/GuessPage";
+import ResultPage from "../Screens/ResultPage";
+import PredictionPage from "../Screens/CameraPredictionScreen";
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
+const HomeStack = createNativeStackNavigator();
+const CameraStack = createNativeStackNavigator();
 
 export default function Tabs() {
   return (
@@ -35,7 +39,11 @@ export default function Tabs() {
                 <View
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
-                  <AntDesign name="home" size={24} color="black" />
+                  <AntDesign
+                    name="home"
+                    size={24}
+                    color={focused ? "red" : "#162478"}
+                  />
                   <Text style={{ fontSize: 12, color: "#162478" }}>Home</Text>
                 </View>
               );
@@ -43,12 +51,21 @@ export default function Tabs() {
           }}
         >
           {() => (
-            <Stack.Navigator>
-              <Stack.Screen name="User Profile" component={UserProfileScreen} />
-              <Stack.Screen name="Ranking" component={RankingScreen} />
-              <Stack.Screen name="Caught Birds" component={CaughtBirdsScreen} />
-              <Stack.Screen name="Single Bird" component={SingleBirdScreen}/>
-            </Stack.Navigator>
+            <HomeStack.Navigator>
+              <HomeStack.Screen
+                name="User Profile"
+                component={UserProfileScreen}
+              />
+              <HomeStack.Screen name="Ranking" component={RankingScreen} />
+              <HomeStack.Screen
+                name="Caught Birds"
+                component={CaughtBirdsScreen}
+              />
+              <HomeStack.Screen
+                name="Single Bird"
+                component={SingleBirdScreen}
+              />
+            </HomeStack.Navigator>
           )}
         </Tab.Screen>
         <Tab.Screen
@@ -61,7 +78,11 @@ export default function Tabs() {
                 <View
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
-                  <Feather name="map-pin" size={24} color="black" />
+                  <Feather
+                    name="map-pin"
+                    size={24}
+                    color={focused ? "red" : "#162478"}
+                  />
                   <Text style={{ fontSize: 12, color: "#162478" }}>Map</Text>
                 </View>
               );
@@ -69,25 +90,46 @@ export default function Tabs() {
           }}
         />
         <Tab.Screen
-          name="Camera"
-          component={CameraScreen}
+          name="Camera Page"
           options={{
+            headerShown: false,
             tabBarShowLabel: false,
             tabBarIcon: ({ focused }) => {
               return (
                 <View
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
-                  <AntDesign name="camera" size={24} color="black" />
+                  <AntDesign
+                    name="camera"
+                    size={24}
+                    color={focused ? "red" : "#162478"}
+                  />
                   <Text style={{ fontSize: 12, color: "#162478" }}>Camera</Text>
                 </View>
               );
             },
           }}
-        />
-
-
-        {/* <Tab.Screen name="User Profile" component={UserProfileScreen} /> */}
+        >
+          {() => (
+            <CameraStack.Navigator>
+              <CameraStack.Screen
+                name="Camera"
+                component={PredictionPage}
+                options={{ headerShown: true }}
+              />
+              <CameraStack.Screen
+                name="Guess Page"
+                component={GuessPage}
+                options={{ headerShown: true }}
+              />
+              <CameraStack.Screen
+                name="Result Page"
+                component={ResultPage}
+                options={{ headerShown: false }}
+              />
+            </CameraStack.Navigator>
+          )}
+        </Tab.Screen>
       </Tab.Navigator>
     </PointsProvider>
   );
