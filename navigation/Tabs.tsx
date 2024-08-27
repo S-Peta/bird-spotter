@@ -47,7 +47,7 @@ export default function Tabs() {
               <Stack.Screen name="User Profile" component={UserProfileScreen} />
               <Stack.Screen name="Ranking" component={RankingScreen} />
               <Stack.Screen name="Caught Birds" component={CaughtBirdsScreen} />
-              <Stack.Screen name="Single Bird" component={SingleBirdScreen}/>
+              <Stack.Screen name="Single Bird" component={SingleBirdScreen} />
             </Stack.Navigator>
           )}
         </Tab.Screen>

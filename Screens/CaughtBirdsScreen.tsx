@@ -10,9 +10,8 @@ import {
   Pressable,
 } from "react-native";
 import React, { useEffect } from "react";
-import { RouteProp, useNavigation } from "@react-navigation/native";
+import {useNavigation } from "@react-navigation/native";
 import {
-  getCaughtBirds,
   getBirds,
   getBirdsImageUrls,
   getMoreBirds,
@@ -30,7 +29,7 @@ type CaughtBirdsScreenNavigationProp = NativeStackNavigationProp<
 const CaughtBirdsScreen = ({ route }: { route: any }) => {
   const navigation = useNavigation<CaughtBirdsScreenNavigationProp>();
   const [imageData, setImageData] = useState<
-    { species: string; url: string }[]
+    { species: string; url: string, scientificName: string, species_id: string }[]
   >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [startAfter, setStartAfter] = useState({});
@@ -48,11 +47,20 @@ const CaughtBirdsScreen = ({ route }: { route: any }) => {
         const formattedBirdNames = birdsData.birdsList.map((bird) => {
           return bird.species.replace(/\s+/g, " ");
         });
+        const scientificNames = birdsData.birdsList.map((bird) => {
+            return bird.scientific_name
+        })
+        const speciesId = birdsData.birdsList.map((bird) => {
+          return bird.species_id
+      })
+        
         setStartAfter(birdsData.lastVisible);
         const urls = await getBirdsImageUrls(formattedBirdNames);
         const imageObjects = formattedBirdNames.map((species, index) => ({
           species,
           url: urls[index],
+          scientificName: scientificNames[index],
+          species_id: speciesId[index].toString()
         }));
 
         setImageData([...imageData, ...imageObjects]);
@@ -70,30 +78,39 @@ const CaughtBirdsScreen = ({ route }: { route: any }) => {
       return bird.species.replace(/\s+/g, " ");
     });
     setStartAfter(birdsData.lastVisible);
+    const scientificNames = birdsData.birdsList.map((bird) => {
+        return bird.scientific_name
+    })
+    const speciesId = birdsData.birdsList.map((bird) => {
+      return bird.species_id
+  })
     const urls = await getBirdsImageUrls(formattedBirdNames);
     const imageObjects = formattedBirdNames.map((species, index) => ({
       species,
       url: urls[index],
+      scientificName: scientificNames[index],
+      species_id: speciesId[index].toString()
     }));
 
     setImageData([...imageData, ...imageObjects]);
   }
-  function handlePress(species: string, url:string) {
-    navigation.navigate("Single Bird", { species, url });
+
+  function handlePress(species: string, url:string, scientificName:string, species_id:string) {
+    navigation.navigate("Single Bird", { species, url, scientificName, species_id});
   }
   if (isLoading) {
     return <ActivityIndicator style={{ marginVertical: 20 }} />;
   }
   return (
     <SafeAreaView style={styles.container}>
-        <Progress.Bar progress={progress} width={300} />
+        <Progress.Bar progress={progress} width={300} color="#4caf50" />
         <Text style={styles.headerText}>
           {totalCaughtBirds}/{totalBirds} birds caught
         </Text>
       <FlatList
         data={imageData}
         renderItem={({ item }) => (
-          <Pressable onPress={() => handlePress(item.species, item.url)}>
+          <Pressable onPress={() => handlePress(item.species, item.url, item.scientificName, item.species_id)}>
             <View style={styles.imageContainer}>
               <Image
                 source={{ uri: item.url }}
@@ -105,8 +122,8 @@ const CaughtBirdsScreen = ({ route }: { route: any }) => {
             </View>
           </Pressable>
         )}
-        keyExtractor={(item) => item.url}
-        numColumns={2} // To render in a grid format
+        keyExtractor={(item) => item.species_id}
+        numColumns={2}
         contentContainerStyle={styles.listContent}
         onEndReached={getMoreImages}
         onEndReachedThreshold={0.01}
@@ -117,11 +134,15 @@ const CaughtBirdsScreen = ({ route }: { route: any }) => {
     </SafeAreaView>
   );
 };
+
+export default CaughtBirdsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 10,
     paddingVertical: 20,
+    alignItems: "center",
+    justifyContent: "center"
   },
   progressContainer: {
     flex: 1,
@@ -153,4 +174,3 @@ const styles = StyleSheet.create({
     opacity: 0.2,
   },
 });
-export default CaughtBirdsScreen;
