@@ -21,6 +21,7 @@ import {
   updateUserTwentyPoints,
   updateUserTenPoints,
 } from "../utils/updateUserPoints";
+import postCaughtBird from "../utils/postCaughtBird";
 import React from "react";
 
 export default function PredictionPage({ navigation }) {
@@ -137,11 +138,13 @@ export default function PredictionPage({ navigation }) {
       {isPredicting && <ActivityIndicator />}
       {prediction && (
         <>
-          {/* <Text style={styles.prediction}>Predicted Bird: {prediction}</Text> */}
           <Text style={styles.prediction}> Prediction is finished! </Text>
           <Pressable
             style={[styles.button, styles.buttonOpen]}
-            onPress={() => setModalVisible(true)}
+            onPress={() => {
+              setModalVisible(true);
+              postCaughtBird(prediction, 0, 0);
+            }}
           >
             <Text style={styles.textStyle}>Continue</Text>
           </Pressable>
@@ -165,7 +168,7 @@ export default function PredictionPage({ navigation }) {
                 setModalVisible(!modalVisible);
                 navigation.navigate("Guess Page", {
                   predictedBird: prediction,
-                  uri: image,
+                  imageUrl: image,
                 });
                 updateUserTwentyPoints();
               }}
@@ -220,7 +223,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    padding: 50,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -239,10 +242,10 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   buttonOpen: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "#729c7f",
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "#729c7f",
   },
   textStyle: {
     color: "white",
@@ -250,7 +253,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   modalText: {
-    marginBottom: 15,
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
     textAlign: "center",
   },
 });
