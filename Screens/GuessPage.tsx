@@ -15,13 +15,13 @@ import React from "react";
 import { useState } from "react";
 import { updateUserTenPoints } from "../utils/updateUserPoints";
 import { updateUserTwentyPoints } from "../utils/updateUserPoints";
+import { Itim_400Regular } from "@expo-google-fonts/itim";
 
 const GuessPage = ({ route, navigation }: { route: any; navigation: any }) => {
   const [guessBird, setGuessBird] = useState("");
   const [result, setResult] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  const { predictedBird, uri } = route.params;
-
+  const { predictedBird, imageUrl } = route.params;
   const onSubmit = () => {
     if (guessBird === predictedBird) {
       setResult(`Yaay, You Correct! \n+10 Points`);
@@ -39,8 +39,12 @@ const GuessPage = ({ route, navigation }: { route: any; navigation: any }) => {
     >
       <SafeAreaView style={styles.container}>
         <Text style={styles.headertext}>Guess the Bird</Text>
-        <Image style={styles.img} source={uri} />
-
+        <Image
+          style={styles.img}
+          source={{
+            uri: imageUrl,
+          }}
+        />
         <TextInput
           style={styles.input}
           value={guessBird}
@@ -49,7 +53,7 @@ const GuessPage = ({ route, navigation }: { route: any; navigation: any }) => {
           autoCapitalize="characters"
         />
         <Pressable style={styles.buttonSubmit} onPress={onSubmit}>
-          <Text style={styles.textStyle}>Submit</Text>
+          <Text style={styles.textStyle}>Guess</Text>
         </Pressable>
         <View>
           <Modal
@@ -88,31 +92,41 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     justifyContent: "center",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#c6dec1",
   },
+
   input: {
+    alignSelf: "center",
+    width: 300,
     height: 50,
     margin: 20,
     padding: 10,
-    borderWidth: 1,
+    borderWidth: 2,
+    borderColor: "#729c7f",
+    backgroundColor: "white",
+    borderRadius: 10,
   },
   headertext: {
-    fontSize: 30,
+    fontSize: 40,
     fontWeight: "bold",
+    fontFamily: "Itim_400Regular",
 
     marginBottom: 50,
     textAlign: "center",
   },
   text: {
     fontSize: 18,
-
     textAlign: "center",
     marginTop: 10,
     marginBottom: 10,
     color: "#555",
   },
   img: {
+    width: 300,
+    height: 300,
+    marginBottom: 50,
     alignSelf: "center",
+    borderRadius: 20,
   },
   centeredView: {
     flex: 1,
@@ -124,7 +138,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    padding: 100,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -141,14 +155,15 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "#729c7f",
   },
   buttonSubmit: {
     alignSelf: "center",
     borderRadius: 20,
+    marginTop: 20,
     padding: 10,
     elevation: 2,
-    backgroundColor: "#2196F3",
+    backgroundColor: "#729c7f",
     width: 100,
   },
 
