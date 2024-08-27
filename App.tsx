@@ -1,3 +1,4 @@
+import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { useEffect, useState } from "react";
@@ -12,7 +13,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SingleBirdScreen from "./Screens/SingleBirdScreen";
 import { RootStackParamList } from "./types";
 
-
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const InsideStack = createNativeStackNavigator();
 
@@ -24,38 +24,24 @@ export default function App() {
     });
   }, []);
   return (
-
-
-  <GestureHandlerRootView style={{ flex: 1 }}>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        {user ? (
-          <Stack.Screen
-            name="Main"
-            component={Tabs}
-            options={{ headerShown: false }}
-          />
-        ) : (
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{ headerShown: false }}
-          />
-        )}
-
-        {/* <Stack.Screen
-          name="Ranking"
-          component={RankingScreen}
-          options={{ headerShown: true }}
-        />
-
-        <Stack.Screen
-          name="Caught Birds"
-          component={CaughtBirdsScreen}
-          options={{ headerShown: false }}
-        /> */}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login">
+          {user ? (
+            <Stack.Screen
+              name="Main"
+              component={Tabs}
+              options={{ headerShown: false }}
+            />
+          ) : (
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
     </GestureHandlerRootView>
   );
 }

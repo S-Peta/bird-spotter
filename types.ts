@@ -10,6 +10,8 @@ export type RootStackParamList = {
     "Single Bird": {
         species: string;
         url: string;
+        scientificName: string,
+        species_id: string
     };
     "Login": undefined;
     "Main": undefined;
