@@ -2,9 +2,10 @@ import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import React, { useEffect } from "react";
 import { getPageTitleAndId, getBirdSummary } from "../api";
 import { useState } from "react";
-import {formatString} from "../utils/formatString";
+import { formatString, convertHTMLToText } from "../utils/formatString";
 import { getABirdImageUrl } from "../utils/getData";
 import { ScrollView } from "react-native-gesture-handler";
+import { Itim_400Regular } from "@expo-google-fonts/itim";
 
 const ResultPage = ({ route, navigation }) => {
   const [url, setUrl] = useState<string>("");
@@ -17,7 +18,8 @@ const ResultPage = ({ route, navigation }) => {
         return getBirdSummary(title, pageId);
       })
       .then(({ summary }) => {
-        setBirdDescription(summary);
+        const plainText = convertHTMLToText(summary);
+        setBirdDescription(plainText);
       });
   }, []);
 
@@ -31,16 +33,8 @@ const ResultPage = ({ route, navigation }) => {
         <View style={styles.container}>
           <Text style={styles.text}>{formatString(predictedBird)}</Text>
           <Image source={{ uri: url }} style={styles.image} />
-          <Text style={styles.description}>Description</Text>
-          <Text>{birdDescription}</Text>
-          <Pressable
-            style={styles.button}
-            onPress={() => {
-              navigation.navigate("Ranking");
-            }}
-          >
-            <Text style={styles.textStyle}>Rankings</Text>
-          </Pressable>
+          <Text style={styles.descriptionTitle}>Description</Text>
+          <Text style={styles.description}>{birdDescription}</Text>
         </View>
       </ScrollView>
     </View>
@@ -55,11 +49,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
+    margin: 20,
+    backgroundColor: "#c6dec1",
+    borderRadius: 15,
+    elevation: 5,
+    borderWidth: 10,
+    borderColor: "#729c7f",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
   },
   text: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
     marginBottom: 20,
+    fontFamily: "Itim_400Regular",
   },
   textStyle: {
     color: "white",
@@ -67,13 +72,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   description: {
-    fontSize: 18,
-    fontWeight: "bold",
-    alignSelf: "flex-start",
-    marginTop: 20,
+    fontSize: 14,
+    marginTop: 10,
   },
+  descriptionTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 20,
+    fontFamily: "Itim_400Regular",
+  },
+
   image: {
-    width: 300,
+    width: "100%",
     height: 300,
     borderRadius: 8,
   },
@@ -85,6 +95,16 @@ const styles = StyleSheet.create({
     width: 100,
     fontWeight: "bold",
     textAlign: "center",
-    backgroundColor: "#2196F3",
+    backgroundColor: "#729c7f",
   },
+  scrollContainer: {
+    flexGrow: 1,
+    backgroundColor: "#f5f4e4",
+  },
+
+  // title: {
+  //   fontSize: 18,
+  //   fontWeight: "bold",
+  //   alignSelf: "center",
+  // },
 });
