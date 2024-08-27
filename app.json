@@ -12,14 +12,18 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+      "isAccessMediaLocationEnabled": true,
+      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["READ_EXTERNAL_STORAGE"]
+      "permissions": ["READ_EXTERNAL_STORAGE", "CAMERA"],
+      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
     },
 
     "web": {

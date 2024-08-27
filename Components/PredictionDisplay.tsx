@@ -15,5 +15,7 @@ const styles = StyleSheet.create({
   prediction: {
     fontSize: 18,
     marginVertical: 16,
+    fontWeight: "bold",
+    color: "#fff",
   },
 });

@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Button } from "react-native";
+import React, { StyleSheet, View, Button, Pressable } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import requestPermissions from "../utils/requestPermissions";
+import Feather from "@expo/vector-icons/Feather";
 
 export default function ImageSelector({ onImageSelect, disabled }) {
   const selectImage = async () => {
@@ -21,7 +21,13 @@ export default function ImageSelector({ onImageSelect, disabled }) {
 
   return (
     <View>
-      <Button title="Select Image" onPress={selectImage} disabled={disabled} />
+      <Pressable
+        onPress={selectImage}
+        disabled={disabled}
+        style={[disabled ? { opacity: 0.5 } : {}]}
+      >
+        <Feather name="film" size={30} color={"#fff"} />
+      </Pressable>
     </View>
   );
 }
