@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   title: {
+    fontFamily: 'InterBold',
     fontSize: 16,
     marginBottom: 10
   },

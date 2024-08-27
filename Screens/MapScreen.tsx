@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Alert } from 'react-native'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import MapView from 'react-native-maps';
 import { getCaughtAllBirds } from '../utils/getData';
 import CustomMarker from '../Components/CustomMarker';
@@ -67,8 +67,6 @@ export default function MapScreen() {
       <BottomSheet
         index={0}
         snapPoints={snapPoints}
-        // ref={bottomSheetRef}
-        // onChange={handleSheetChanges}
         >
         <View style={styles.bottomSheetcontainer}>
           <Text style={styles.listTitle}>Over {caughtBirds.length} birds nearby</Text>
@@ -95,7 +93,6 @@ const styles = StyleSheet.create({
   },
   bottomSheetcontainer: {
     flex: 1,
-    // padding: 10
   },
   listTitle: {
     textAlign: 'center',

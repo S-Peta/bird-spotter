@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   Pressable,
+  Modal
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import * as tf from "@tensorflow/tfjs";
@@ -19,14 +20,20 @@ import ImageSelector from "../Components/ImageSelector";
 import ImagePreview from "../Components/ImagePreview";
 import PredictionDisplay from "../Components/PredictionDisplay";
 import CameraShot from "../Components/CameraShot";
+import {
+  updateUserTwentyPoints,
+  updateUserTenPoints,
+} from "../utils/updateUserPoints";
 import Feather from "@expo/vector-icons/Feather";
 
-const CameraScreen = () => {
+
+const PredictionPage = ({navigation}) => {
   const [model, setModel] = useState<tf.LayersModel | null>(null);
   const [image, setImage] = useState<string | null>(null);
   const [prediction, setPrediction] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPredicting, setIsPredicting] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const { width, height } = Dimensions.get("window");
 
@@ -37,16 +44,10 @@ const CameraScreen = () => {
 
   const handleImageSelect = (imageUri) => {
     setImage(imageUri);
-    /*     if (model) {
-      predictImage(imageUri);
-    } */
   };
 
   const handleCapture = (imageUri) => {
     setImage(imageUri);
-    /*     if (model) {
-      predictImage(imageUri);
-    } */
   };
 
   const handlePredict = () => {
@@ -135,6 +136,57 @@ const CameraScreen = () => {
           <Text style={styles.text}>Predicting...</Text>
         </View>
       )}
+            {prediction && (
+        <>
+          <Text style={styles.prediction}> Prediction is finished! </Text>
+          <Pressable
+            style={[styles.button, styles.buttonOpen]}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.textStyle}>Continue</Text>
+          </Pressable>
+        </>
+      )}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Guess the bird?</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => {
+                setModalVisible(!modalVisible);
+                navigation.navigate("Guess Page", {
+                  predictedBird: prediction,
+                  uri: image,
+                });
+                updateUserTwentyPoints();
+              }}
+            >
+              <Text style={styles.textStyle}>Yes</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => {
+                setModalVisible(!modalVisible);
+                navigation.navigate("Result Page", {
+                  predictedBird: prediction,
+                });
+                updateUserTwentyPoints();
+              }}
+            >
+              <Text style={styles.textStyle}>No</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -144,6 +196,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  prediction: {
+    fontSize: 18,
+    marginVertical: 16,
   },
   overlay: {
     position: "absolute",
@@ -168,18 +224,55 @@ const styles = StyleSheet.create({
     zIndex: 20,
   },
   text: {
-    color: "#fff",
+    fontSize: 18,
+    textAlign: "center",
+    marginTop: 10,
+    marginBottom: 10,
+    color: "#555",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    paddingHorizontal: 20,
+    elevation: 2,
+    margin: 5,
+  },
+  buttonOpen: {
+    backgroundColor: "#2196F3",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
     fontWeight: "bold",
     textAlign: "center",
-    width: 10,
-    borderRadius: 12,
-    flexDirection: "column",
-    height: 30,
-    position: "absolute",
-    top: "40%",
-    left: "50%",
-    zIndex: 20,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
 
-export default CameraScreen;
+export default PredictionPage;
