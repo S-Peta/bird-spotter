@@ -80,5 +80,5 @@ export async function getBirdsImageUrls(speciesName:string[]) {
       console.log(err)
     }
   }
- return urls
+  return urls
 }

@@ -10,6 +10,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/itim": "^0.2.3",
     "@expo/metro-runtime": "~3.2.3",
     "@gorhom/bottom-sheet": "^4.6.4",
     "@react-native/metro-config": "^0.75.2",
@@ -20,6 +21,7 @@
     "@tensorflow/tfjs-react-native": "^1.0.0",
     "axios": "^1.7.4",
     "expo": "~51.0.28",
+    "expo-font": "~12.0.9",
     "expo-location": "~17.0.1",
     "expo-status-bar": "~1.12.1",
     "express": "^4.19.2",
@@ -38,7 +40,8 @@
     "react-native-tensorflow": "^0.1.8",
     "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.12",
-    "react-native-webview": "^13.8.6"
+    "react-native-webview": "^13.8.6",
+    "expo-image-picker": "~15.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
