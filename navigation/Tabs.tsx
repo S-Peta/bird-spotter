@@ -1,6 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MapScreen from "../Screens/MapScreen";
+import CameraScreen from "../Screens/CameraScreen";
 import UserProfileScreen from "../Screens/UserProfileScreen";
 import { PointsProvider } from "../Contexts/Points";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -9,6 +10,7 @@ import CaughtBirdsScreen from "../Screens/CaughtBirdsScreen";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { View, Text } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Feather from "@expo/vector-icons/Feather";
 import SingleBirdScreen from "../Screens/SingleBirdScreen";
 import GuessPage from "../Screens/GuessPage";
 import ResultPage from "../Screens/ResultPage";
@@ -66,7 +68,6 @@ export default function Tabs() {
             </HomeStack.Navigator>
           )}
         </Tab.Screen>
-
         <Tab.Screen
           name="Map"
           component={MapScreen}
@@ -88,8 +89,8 @@ export default function Tabs() {
         />
 
         <Tab.Screen
-          name="Caught Birds"
-          component={CaughtBirdsScreen}
+          name="Caught Birds Page"
+          component={MapScreen}
           options={{
             tabBarShowLabel: false,
             tabBarIcon: ({ focused }) => {
