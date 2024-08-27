@@ -34,7 +34,19 @@
             "name": "rescaling",
             "inbound_nodes": [[["input_1", 0, 0, {}]]]
           },
-
+          {
+            "class_name": "Normalization",
+            "config": {
+              "name": "normalization",
+              "trainable": true,
+              "dtype": "float32",
+              "axis": [3],
+              "mean": [0.485, 0.456, 0.406],
+              "variance": [0.052441, 0.050176000000000005, 0.050625]
+            },
+            "name": "normalization",
+            "inbound_nodes": [[["rescaling", 0, 0, {}]]]
+          },
           {
             "class_name": "Conv2D",
             "config": {
@@ -6171,13 +6183,7 @@
                   "l2": 0.01600000075995922
                 }
               },
-              "activity_regularizer": {
-                "class_name": "L1L2",
-                "config": {
-                  "l1": 0.006000000052154064,
-                  "l2": 0.01600000075995922
-                }
-              },
+              "activity_regularizer": null,
               "kernel_constraint": null,
               "bias_constraint": null
             },
