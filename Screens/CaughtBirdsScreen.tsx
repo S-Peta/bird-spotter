@@ -46,7 +46,7 @@ const CaughtBirdsScreen = ({ route }: { route: any }) => {
   const auth = getAuth();
   const userId = auth.currentUser?.uid;
 
-  const resultsPerPage = 40;
+  const resultsPerPage = 10;
 
   useEffect(() => {
     setIsLoading(true);
@@ -122,7 +122,9 @@ const CaughtBirdsScreen = ({ route }: { route: any }) => {
     }));
 
     setImageData([...imageData, ...imageObjects]);
+    console.log(scientificNames);
   }
+
 
   function handlePress(species: string, url: string, scientificName: string, species_id: string) {
     navigation.navigate("Single Bird", {
@@ -149,16 +151,16 @@ const CaughtBirdsScreen = ({ route }: { route: any }) => {
           <Icon name="search" size={20} color="#fff" />
         </Pressable>
       </View>
-        <View style={styles.filterButtonContainer}>
-          <Pressable
-            onPress={() => setFilterDropdownVisible(!filterDropdownVisible)}
-            style={styles.filterButton}
-          >
-          <Text style={styles.filterButtonText}>{filterType} <Icon name="caret-down" size={12} /></Text>
-          </Pressable>
-          {filterDropdownVisible && (
-            <View style={styles.dropdownMenu}>
-                {filterType !== "All" && (
+      <View style={styles.filterButtonContainer}>
+        <Pressable
+          onPress={() => setFilterDropdownVisible(!filterDropdownVisible)}
+          style={styles.filterButton}
+        >
+        <Text style={styles.filterButtonText}>{filterType} <Icon name="caret-down" size={12} /></Text>
+        </Pressable>
+        {filterDropdownVisible && (
+          <View style={styles.dropdownMenu}>
+            {filterType !== "All" && (
               <Pressable onPress={() => {
                 setFilterType("All");
                 setFilterDropdownVisible(false);
@@ -167,48 +169,48 @@ const CaughtBirdsScreen = ({ route }: { route: any }) => {
               </Pressable>
               )}
               {filterType !== "My Birds" && (
-              <Pressable onPress={() => {
-                setFilterType("My Birds");
-                setFilterDropdownVisible(false);
-              }}>
-                <Text style={styles.dropdownItem}>My Birds</Text>
-              </Pressable>
+                <Pressable onPress={() => {
+                  setFilterType("My Birds");
+                  setFilterDropdownVisible(false);
+                  }}>
+                  <Text style={styles.dropdownItem}>My Birds</Text>
+                </Pressable>
               )}
             </View>
           )}
-        </View>
-        <View style={styles.contentContainer}>
-        {displayedBirds.length === 0 ? (
-          <Text style={styles.noBirdsText}>
+          </View>
+          <View style={styles.contentContainer}>
+          {displayedBirds.length === 0 ? (
+            <Text style={styles.noBirdsText}>
             You haven't caught any birds yet...
             Go catch them!
-          </Text>
-        ) : (
-      <FlatList
-        data={displayedBirds}
-        renderItem={({ item }) => (
-          <Pressable onPress={() => handlePress(item.species, item.url, item.scientificName, item.species_id)}>
-            <View style={styles.imageContainer}>
-              <Image
-                source={{ uri: item.url }}
-                style={[
-                  styles.image,
-                  !caughtBirds.includes(item.species) && styles.grayscale,
-                ]}
-              />
-            </View>
-          </Pressable>
-        )}
-        keyExtractor={(item) => item.species_id}
-        numColumns={4}
-        contentContainerStyle={styles.listContent}
-        onEndReached={getMoreImages}
-        onEndReachedThreshold={0.01}
-        ListFooterComponent={() => (
+            </Text>
+          ) : (
+          <FlatList
+          data={displayedBirds}
+          renderItem={({ item }) => (
+            <Pressable onPress={() => handlePress(item.species, item.url, item.scientificName, item.species_id)}>
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{ uri: item.url }}
+                  style={[
+                    styles.image,
+                    !caughtBirds.includes(item.species) && styles.grayscale,
+                  ]}
+                />
+              </View>
+            </Pressable>
+          )}
+          keyExtractor={(item) => item.species_id}
+          numColumns={4}
+          contentContainerStyle={styles.listContent}
+          onEndReached={getMoreImages}
+          onEndReachedThreshold={0.01}
+          ListFooterComponent={() => (
           <ActivityIndicator style={{ marginVertical: 20 }} />
+          )}
+        />
         )}
-      />
-      )}
       </View>
     </SafeAreaView>
   );
