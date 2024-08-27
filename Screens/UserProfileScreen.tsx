@@ -118,9 +118,6 @@ const UserProfileScreen = () => {
 
 
   const progress = totalCaughtBirds / totalBirds
-  }, []);
-
-  const progress = totalCaughtBirds / totalBirds;
 
   return (
     <View>
@@ -183,8 +180,6 @@ const UserProfileScreen = () => {
       </View>
     </View>
 
-  )
-}
   );
 };
 
@@ -333,5 +328,4 @@ dingdingIcon: {
   },
 });
 
-export default UserProfileScreen
 export default UserProfileScreen;
