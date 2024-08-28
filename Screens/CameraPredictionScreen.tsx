@@ -86,7 +86,6 @@ const PredictionPage = ({ navigation }) => {
           console.error("Image file does not exist.");
           return;
         }
-        console.log(fileInfo);
 
         const imageData = await FileSystem.readAsStringAsync(imageUri, {
           encoding: FileSystem.EncodingType.Base64,
@@ -113,7 +112,6 @@ const PredictionPage = ({ navigation }) => {
 
         setPrediction(species);
         setIsPredicting(false);
-        // setImage(null);
       } catch (error) {
         console.error("error during prediction", error);
       }
