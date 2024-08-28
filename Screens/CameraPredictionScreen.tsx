@@ -25,10 +25,10 @@ import {
   updateUserTwentyPoints,
   updateUserTenPoints,
 } from "../utils/updateUserPoints";
-
+import { LocationCoords } from "../types";
 import postCaughtBird from "../utils/postCaughtBird";
-
 import Feather from "@expo/vector-icons/Feather";
+import getCurrentLocation from "../utils/getCurrentLocation";
 
 const PredictionPage = ({ navigation }) => {
   const [model, setModel] = useState<tf.LayersModel | null>(null);
@@ -38,7 +38,7 @@ const PredictionPage = ({ navigation }) => {
   const [isPredicting, setIsPredicting] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-
+  const [location, setLocation] = useState<LocationCoords | null>(null);
   const { width, height } = Dimensions.get("window");
 
   useEffect(() => {
@@ -54,11 +54,17 @@ const PredictionPage = ({ navigation }) => {
 
   const handleImageSelect = (imageUri) => {
     setImage(imageUri);
+    getCurrentLocation().then((currLocation) => {
+      setLocation(currLocation);
+    });
     setShowPreview(true);
   };
 
   const handleCapture = (imageUri) => {
     setImage(imageUri);
+    getCurrentLocation().then((currLocation) => {
+      setLocation(currLocation);
+    });
     setShowPreview(true);
   };
 
@@ -79,6 +85,7 @@ const PredictionPage = ({ navigation }) => {
           console.error("Image file does not exist.");
           return;
         }
+        console.log(fileInfo);
 
         const imageData = await FileSystem.readAsStringAsync(imageUri, {
           encoding: FileSystem.EncodingType.Base64,
@@ -156,7 +163,7 @@ const PredictionPage = ({ navigation }) => {
             style={[styles.button, styles.buttonOpen]}
             onPress={() => {
               setModalVisible(true);
-              postCaughtBird(prediction, 0, 0);
+              postCaughtBird(prediction, location.latitude, location.longitude);
             }}
           >
             <Text style={styles.textStyle}>Continue</Text>
