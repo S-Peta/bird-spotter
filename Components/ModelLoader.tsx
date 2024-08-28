@@ -30,6 +30,4 @@ export default function ModelLoader({ onModelLoad }) {
     }
     setIsLoading(false);
   };
-
-  return <View>{isLoading && <ActivityIndicator />}</View>;
 }

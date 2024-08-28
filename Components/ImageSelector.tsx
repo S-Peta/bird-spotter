@@ -24,9 +24,9 @@ export default function ImageSelector({ onImageSelect, disabled }) {
       <Pressable
         onPress={selectImage}
         disabled={disabled}
-        style={[disabled ? { opacity: 0.5 } : {}]}
+        style={[disabled ? { opacity: 0 } : {}]}
       >
-        <Feather name="film" size={30} color={"#fff"} />
+        <Feather name="image" size={40} color={"#fff"} />
       </Pressable>
     </View>
   );

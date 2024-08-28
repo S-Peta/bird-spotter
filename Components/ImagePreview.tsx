@@ -16,16 +16,14 @@ export default function ImagePreview({ imageUri }) {
 
 const styles = StyleSheet.create({
   imageContainer: {
-    width: width,
-    height: height * 0.7,
+    ...StyleSheet.absoluteFillObject,
     alignItems: "center",
     justifyContent: "center",
-    margin: 5,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "black",
   },
   image: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "contain",
+    width: width,
+    height: height,
+    resizeMode: "cover",
   },
 });

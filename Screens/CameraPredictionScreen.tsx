@@ -19,7 +19,6 @@ import getBirdSpecies from "../utils/getBirdSpecies";
 getBirdSpecies;
 import ImageSelector from "../Components/ImageSelector";
 import ImagePreview from "../Components/ImagePreview";
-import PredictionDisplay from "../Components/PredictionDisplay";
 import CameraShot from "../Components/CameraShot";
 import {
   updateUserTwentyPoints,
@@ -126,7 +125,11 @@ const PredictionPage = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {isLoading && <ActivityIndicator size="large" />}
+      {isLoading && (
+        <View style={styles.activityContainer}>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
       <View style={styles.contentContainer}>
         {image && showPreview ? (
           <>
@@ -143,28 +146,34 @@ const PredictionPage = ({ navigation }) => {
           />
         )}
       </View>
-
       <View style={styles.controlsContainer}>
         <ModelLoader onModelLoad={handleModelLoad} />
-        <ImageSelector
-          onImageSelect={handleImageSelect}
-          disabled={!model || isPredicting}
-        />
-
+        {!image && (
+          <View style={styles.imageSelectorContainer}>
+            <ImageSelector
+              onImageSelect={handleImageSelect}
+              disabled={!model || isPredicting}
+            />
+          </View>
+        )}
         {image && !isPredicting && (
-          <Pressable onPress={handlePredict} style={styles.predictButton}>
-            <Feather name="eye" size={100} color={"#fff"} />
-            <Text style={styles.predictButtonText}>Predict</Text>
-          </Pressable>
+          <View>
+            <Pressable onPress={handlePredict} style={styles.predictButton}>
+              <View style={styles.glowEffect} />
+              <Image
+                style={styles.birdIcon}
+                source={require("../assets/bird.png")}
+              />
+            </Pressable>
+          </View>
         )}
       </View>
       {isPredicting && (
         <View style={styles.activityOverlay}>
           <ActivityIndicator size="large" />
-          <Text style={styles.text}>Predicting...</Text>
+          <Text style={styles.text}>Catching...</Text>
         </View>
       )}
-      <PredictionDisplay prediction={prediction} isPredicting={isPredicting} />
       <Modal
         animationType="slide"
         transparent={true}
@@ -212,19 +221,33 @@ const PredictionPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    position: "relative",
+  },
+  activityContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   contentContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "transparent",
+    zIndex: 1,
   },
   controlsContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 20,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "transparent",
+    zIndex: 2,
+  },
+  imageSelectorContainer: {
+    position: "absolute",
+    left: 30,
+    bottom: 30,
   },
   closeButton: {
     position: "absolute",
@@ -232,17 +255,42 @@ const styles = StyleSheet.create({
     left: 20,
     zIndex: 10,
   },
-  predictButton: {
-    flexDirection: "row",
+  predictButtonContainer: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#729c7f",
-    padding: 10,
-    borderRadius: 5,
+  },
+  predictButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 70,
+    width: 110,
+    height: 110,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    bottom: 10,
   },
   predictButtonText: {
     color: "#fff",
     marginLeft: 5,
     fontWeight: "bold",
+  },
+  birdIcon: {
+    width: 80,
+    height: 80,
+    resizeMode: "cover",
+  },
+  glowEffect: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 55,
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    shadowColor: "#ffdd00",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 1,
   },
   prediction: {
     fontSize: 18,
@@ -253,6 +301,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
+    zIndex: 10,
   },
   text: {
     fontSize: 18,
@@ -265,7 +314,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
   },
   modalView: {
     margin: 20,
