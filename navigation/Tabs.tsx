@@ -58,10 +58,6 @@ export default function Tabs() {
               />
               <HomeStack.Screen name="Ranking" component={RankingScreen} />
               <HomeStack.Screen
-                name="Caught Birds"
-                component={CaughtBirdsScreen}
-              />
-              <HomeStack.Screen
                 name="Single Bird"
                 component={SingleBirdScreen}
               />
@@ -90,8 +86,9 @@ export default function Tabs() {
 
         <Tab.Screen
           name="Caught Birds"
-          component={CaughtBirdsScreen}
+          // component={CaughtBirdsScreen}
           options={{
+            headerShown: false,
             tabBarShowLabel: false,
             tabBarIcon: ({ focused }) => {
               return (
@@ -106,7 +103,21 @@ export default function Tabs() {
               );
             },
           }}
-        />
+          >
+          {() => (
+            <HomeStack.Navigator>
+              <HomeStack.Screen
+                name="Caught Birds"
+                component={CaughtBirdsScreen}
+
+              />
+              <HomeStack.Screen
+                name="Single Bird"
+                component={SingleBirdScreen}
+              />
+            </HomeStack.Navigator>
+          )}
+          </Tab.Screen>
 
         {/* <Tab.Screen
           name="Guess Page"
@@ -126,7 +137,7 @@ export default function Tabs() {
               );
             },
           }}
-        /> */} 
+        /> */}
 
         <Tab.Screen
           name="Camera Page"

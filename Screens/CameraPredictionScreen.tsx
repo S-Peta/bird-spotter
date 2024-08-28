@@ -26,8 +26,6 @@ import {
 } from "../utils/updateUserPoints";
 
 import postCaughtBird from "../utils/postCaughtBird";
-import React from "react";
-
 import Feather from "@expo/vector-icons/Feather";
 
 
