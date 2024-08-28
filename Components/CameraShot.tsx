@@ -35,7 +35,7 @@ export default function CameraShot({ onCapture, isPredicting, isLoading }) {
     );
   }
   const takePicture = async () => {
-    if (cameraRef.current && !isPredicting) {
+    if (cameraRef.current && !isPredicting && !isLoading) {
       try {
         const photo = await cameraRef.current.takePictureAsync();
 
@@ -72,14 +72,14 @@ export default function CameraShot({ onCapture, isPredicting, isLoading }) {
     <View style={styles.container}>
       {!showPreview ? (
         <Camera style={[styles.camera]} ref={cameraRef}>
-          <View style={styles.buttonContainer}>
+          <View style={styles.overlay}>
             {!isLoading && (
               <TouchableOpacity
-                style={[styles.button, isPredicting ? { opacity: 0.5 } : {}]}
+                style={[styles.captureButton, isPredicting && { opacity: 0.5 }]}
                 onPress={takePicture}
                 disabled={isPredicting}
               >
-                <Feather name="camera" size={100} color={"#fff"} />
+                <View style={styles.captureButtonInner} />
               </TouchableOpacity>
             )}
           </View>
@@ -96,23 +96,32 @@ const styles = StyleSheet.create({
     flex: 1,
     width: width,
     height: height,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  button: {
-    width: 100,
-    borderRadius: 40,
-    borderColor: "#fff",
+  overlay: {
+    flex: 1,
+    backgroundColor: "transparent",
     flexDirection: "row",
-    height: 100,
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  captureButton: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderWidth: 5,
+    borderColor: "#fff",
+    backgroundColor: "transparent",
     alignItems: "center",
     justifyContent: "center",
     bottom: 20,
   },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    margin: 20,
-    backgroundColor: "transparent",
+  captureButtonInner: {
+    width: 54,
+    height: 54,
+    borderColor: "#fff",
+    borderRadius: 36,
   },
   text: {
     color: "#fff",
@@ -122,13 +131,16 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
-    width: "100%",
-    height: "100%",
-    backgroundColor: "blue",
+    width: width,
+    height: height,
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   preview: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    width: width,
+    height: height,
   },
 });
