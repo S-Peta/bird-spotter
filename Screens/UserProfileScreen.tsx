@@ -209,13 +209,13 @@ const UserProfileScreen = () => {
         <View style={styles.birdsCard}>
           <View style={styles.birdsList}>
             <FlatList
-            data={mostRecentBirds}
-            horizontal
-            renderItem={({item}) => (
+              data={mostRecentBirds}
+              horizontal
+              renderItem={({item}) => (
                 <Pressable  onPress={() => handlePress(item.species, item.url, item.scientificName)}>
                 <Image style={styles.birdImage} source={{ uri: item.url }} />
               </Pressable>
-            )}
+              )}
             keyExtractor={(item) => item.species}
             showsHorizontalScrollIndicator={false}>
             </FlatList>
