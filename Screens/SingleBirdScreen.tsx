@@ -1,13 +1,23 @@
-import { View, Text, Image, StyleSheet, ScrollView, Button, Alert, TouchableOpacity, ActivityIndicator} from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '../types';
-import {formatString, convertHTMLToText} from '../utils/formatString';
-import { getPageTitleAndId, getBirdSummary, getBirdSounds } from '../api';
-import { Asset } from 'expo-asset';
-import { Audio } from 'expo-av';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Button,
+  Alert,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { RootStackParamList } from "../types";
+import { formatString, convertHTMLToText } from "../utils/formatData";
+import { getPageTitleAndId, getBirdSummary, getBirdSounds } from "../api";
+import { Asset } from "expo-asset";
+import { Audio } from "expo-av";
 import AntDesign from "@expo/vector-icons/AntDesign";
-type SingleBirdScreenRouteProp = RouteProp<RootStackParamList, 'Single Bird'>;
+type SingleBirdScreenRouteProp = RouteProp<RootStackParamList, "Single Bird">;
 
 const SingleBirdScreen = () => {
   const route = useRoute<SingleBirdScreenRouteProp>()
@@ -88,7 +98,7 @@ const SingleBirdScreen = () => {
   };
 
   return (
-    (<View style={styles.cardContainer}>
+    <View style={styles.cardContainer}>
       <View style={styles.cardContent}>
         <View style={styles.imageContainer}>
           <Image
@@ -121,7 +131,7 @@ const SingleBirdScreen = () => {
         </View>
       </View>
     </View>)
-  )
+  
 }
 
 export default SingleBirdScreen
