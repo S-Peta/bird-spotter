@@ -12,7 +12,6 @@ import { Camera } from "expo-camera/legacy";
 import CameraPreview from "./CameraPreview";
 import * as MediaLibrary from "expo-media-library";
 import Feather from "@expo/vector-icons/Feather";
-
 const { width, height } = Dimensions.get("window");
 
 export default function CameraShot({ onCapture, isPredicting, isLoading }) {
@@ -39,6 +38,7 @@ export default function CameraShot({ onCapture, isPredicting, isLoading }) {
     if (cameraRef.current && !isPredicting) {
       try {
         const photo = await cameraRef.current.takePictureAsync();
+
         setShowPreview(true);
         setCapturedImage(photo);
         if (onCapture) {

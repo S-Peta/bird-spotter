@@ -11,6 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "--legacy-peer-deps": "^0.0.1-security.6",
     "@expo-google-fonts/itim": "^0.2.3",
     "@expo/metro-runtime": "~3.2.3",
     "@gorhom/bottom-sheet": "^4.6.4",
