@@ -46,14 +46,15 @@ const CaughtBirdsScreen = ({ route }: { route: any }) => {
   const auth = getAuth();
   const userId = auth.currentUser?.uid;
 
-  const resultsPerPage = 10;
+  const resultsPerPage = 40;
 
   useEffect(() => {
     setIsLoading(true);
-
-    getCaughtBirdSpecies(userId).then((caughtBirds) => {
-      setCaughtBirds(caughtBirds);
-    });
+    if (userId){
+      getCaughtBirdSpecies(userId).then((caughtBirds) => {
+        setCaughtBirds(caughtBirds);
+      });
+    }
     async function getImages() {
       try {
         const birdsData = await getBirds(resultsPerPage);

@@ -65,11 +65,6 @@ const CameraScreen = ({ navigation }) => {
   )
 }
 
-export default CameraScreen
-
-  );
-};
-
 const styles = StyleSheet.create({
   text: {
     fontSize: 18,

@@ -90,6 +90,7 @@ export async function getBirds(resultsPerPage: number) {
 export async function getMoreBirds(startAft: {}, resultsPerPage: number) {
   const firstPage = query(
     collection(db, "Bird_Species"),
+    orderBy("species_id", "asc"),
     startAfter(startAft),
     limit(resultsPerPage)
   );
@@ -106,6 +107,18 @@ export async function getPointsForUser(userID: string) {
   const docSnap = await getDoc(docRef);
   const userPoints = docSnap.data()?.points;
   return userPoints;
+}
+export async function getStreaksForUser(userId:string) {
+  const docRef = doc(db, "Users", userId);
+  const docSnap = await getDoc(docRef);
+  const usersStreak = docSnap.data()?.days_streak
+  return usersStreak
+}
+export async function getGuessesForUser(userId:string) {
+  const docRef = doc(db, "Users", userId);
+  const docSnap = await getDoc(docRef);
+  const correctGuesses = docSnap.data()?.guesses
+  return correctGuesses
 }
 export async function getUsername(userID: string) {
   const docRef = doc(db, "Users", userID);
