@@ -16,12 +16,14 @@ const CaughtBirdMapCard = ({ caughtBird, setSelectedBird }) => {
         source={{ uri: caughtBird.image || defaultImageUri }}
       />
       <View style={styles.rightContainer}>
-        <TouchableOpacity
-          onPress={() => setSelectedBird(null)}
-          style={styles.closeButton}
-        >
-          <AntDesign name="closecircleo" size={18} color="black" />
-        </TouchableOpacity>
+        {setSelectedBird && (
+          <TouchableOpacity
+            onPress={() => setSelectedBird(null)}
+            style={styles.closeButton}
+          >
+            <AntDesign name="closecircleo" size={18} color="black" />
+          </TouchableOpacity>
+        )}
         <Text style={styles.title}>{caughtBird.species}</Text>
 
         {/* <Text style={styles.description}>caughtBird.info</Text> */}
