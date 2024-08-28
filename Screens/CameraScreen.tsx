@@ -62,8 +62,8 @@ const CameraScreen = ({ navigation }) => {
         </View>
       </Modal>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   text: {
@@ -118,4 +118,3 @@ const styles = StyleSheet.create({
 });
 
 export default CameraScreen;
-

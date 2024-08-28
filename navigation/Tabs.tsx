@@ -15,8 +15,8 @@ import SingleBirdScreen from "../Screens/SingleBirdScreen";
 import GuessPage from "../Screens/GuessPage";
 import ResultPage from "../Screens/ResultPage";
 import PredictionPage from "../Screens/CameraPredictionScreen";
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Entypo from '@expo/vector-icons/Entypo';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Entypo from "@expo/vector-icons/Entypo";
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -41,7 +41,9 @@ export default function Tabs() {
                 <View
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
-                  <FontAwesome name="user" size={24}
+                  <FontAwesome
+                    name="user"
+                    size={24}
                     color={focused ? "orange" : "black"}
                   />
                   {/* <Text style={{ fontSize: 12, color: "#162478" }}>Home</Text> */}
@@ -52,15 +54,8 @@ export default function Tabs() {
         >
           {() => (
             <HomeStack.Navigator>
-              <HomeStack.Screen
-                name="Profile"
-                component={UserProfileScreen}
-              />
+              <HomeStack.Screen name="Profile" component={UserProfileScreen} />
               <HomeStack.Screen name="Ranking" component={RankingScreen} />
-              <HomeStack.Screen
-                name="Caught Birds"
-                component={CaughtBirdsScreen}
-              />
               <HomeStack.Screen
                 name="Single Bird"
                 component={SingleBirdScreen}
@@ -78,7 +73,9 @@ export default function Tabs() {
                 <View
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
-                  <Ionicons name="map" size={24}
+                  <Ionicons
+                    name="map"
+                    size={24}
                     color={focused ? "orange" : "black"}
                   />
                   {/* <Text style={{ fontSize: 12, color: "#162478" }}>Map</Text> */}
@@ -89,8 +86,45 @@ export default function Tabs() {
         />
 
         <Tab.Screen
-          name="Birds Collection"
-          component={CaughtBirdsScreen}
+          name="Caught Birds"
+          // component={CaughtBirdsScreen}
+          options={{
+            headerShown: false,
+            tabBarShowLabel: false,
+            tabBarIcon: ({ focused }) => {
+              return (
+                <View
+                  style={{ alignItems: "center", justifyContent: "center" }}
+                >
+                  <Entypo
+                    name="book"
+                    size={24}
+                    color={focused ? "orange" : "black"}
+                  />
+                  {/* <Text style={{ fontSize: 12, color: "#162478" }}>Map</Text> */}
+                </View>
+              );
+            },
+          }}
+          >
+          {() => (
+            <HomeStack.Navigator>
+              <HomeStack.Screen
+                name="Caught Birds"
+                component={CaughtBirdsScreen}
+
+              />
+              <HomeStack.Screen
+                name="Single Bird"
+                component={SingleBirdScreen}
+              />
+            </HomeStack.Navigator>
+          )}
+          </Tab.Screen>
+
+        {/* <Tab.Screen
+          name="Guess Page"
+          component={GuessPage}
           options={{
             tabBarShowLabel: false,
             tabBarIcon: ({ focused }) => {
@@ -102,11 +136,11 @@ export default function Tabs() {
                     color={focused ? "orange" : "black"}
                   />
                   {/* <Text style={{ fontSize: 12, color: "#162478" }}>Map</Text> */}
-                </View>
+                {/* </View>
               );
             },
           }}
-        />
+        /> */}
 
         <Tab.Screen
           name="Camera Page"
@@ -129,7 +163,6 @@ export default function Tabs() {
             },
           }}
         >
-
           {() => (
             <CameraStack.Navigator>
               <CameraStack.Screen
@@ -145,7 +178,7 @@ export default function Tabs() {
               <CameraStack.Screen
                 name="Result Page"
                 component={ResultPage}
-                options={{ headerShown: true }}
+                options={{ headerShown: false }}
               />
             </CameraStack.Navigator>
           )}
