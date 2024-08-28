@@ -53,7 +53,7 @@ export default function Tabs() {
           {() => (
             <HomeStack.Navigator>
               <HomeStack.Screen
-                name="User Profile"
+                name="Profile"
                 component={UserProfileScreen}
               />
               <HomeStack.Screen name="Ranking" component={RankingScreen} />
@@ -89,8 +89,8 @@ export default function Tabs() {
         />
 
         <Tab.Screen
-          name="Caught Birds Page"
-          component={MapScreen}
+          name="Birds Collection"
+          component={CaughtBirdsScreen}
           options={{
             tabBarShowLabel: false,
             tabBarIcon: ({ focused }) => {

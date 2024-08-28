@@ -2,7 +2,7 @@ import { View, Text, Button, StyleSheet, Pressable, Image, TouchableOpacity, Ale
 import React, { useEffect, useState } from 'react';
 import { firebase_auth, db, storage } from '../index';
 import { signOut, getAuth, updateProfile } from "firebase/auth";
-import { getCaughtBirds, getCaughtBirdSpecies, getPointsForUser, getBirds, getBirdsImageUrls, getCaughtBirdScientificName} from '../utils/getData';
+import { getCaughtBirds, getCaughtBirdSpecies, getPointsForUser, getBirds, getBirdsImageUrls, getCaughtBirdScientificName, getStreaksForUser, getGuessesForUser} from '../utils/getData';
 import { useNavigation, NavigationProp} from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { useContext } from 'react';
@@ -18,6 +18,7 @@ import * as Progress from 'react-native-progress';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { FlatList } from 'react-native-gesture-handler';
 import { RootStackParamList } from '../types';
+import { Log } from '@tensorflow/tfjs';
 const UserProfileScreen = () => {
   const auth = firebase_auth;
   const userAuth = getAuth();
@@ -35,6 +36,8 @@ const UserProfileScreen = () => {
   const[mostRecentBirds, setMostRecentBirds] = useState<
   { species: string; url: string, scientificName: string}[]
 >([]);
+const [daysStreak, setDaysStreak] = useState(0)
+const [correctGuesses, setCorrectGuesses] = useState(0)
 
   if (user) {
     getPointsForUser(user.uid).then((userPoints) => {
@@ -121,8 +124,6 @@ const UserProfileScreen = () => {
           const scientificName = await getCaughtBirdScientificName(bird)
           return scientificName
         }))
-
-       
           const urls = await getBirdsImageUrls(formattedBirdNames);
           const imageObjects = formattedBirdNames.map((species, index) => ({
             species,
@@ -137,7 +138,15 @@ const UserProfileScreen = () => {
      
     }
     getImages()
-  }, [])
+    getStreaksForUser(user.uid)
+    .then((streak) => {
+      setDaysStreak(streak)
+    })
+    getGuessesForUser(user.uid)
+    .then((guesses) => {
+      setCorrectGuesses(guesses)
+    })
+  }, [daysStreak, correctGuesses])
   const progress = totalCaughtBirds / totalBirds
   function handlePress(species: string, url:string, scientificName: string) {
     navigation.navigate('Single Bird', { species, url, scientificName})
@@ -177,11 +186,11 @@ const UserProfileScreen = () => {
       <View style={styles.cardsContainer}>
         <View style={styles.card}>
           <Icon name="flame" size={30} color="orange" />
-          <Text style={styles.textCard}>Overview 1</Text>
+          <Text style={styles.textCard}>{daysStreak} days</Text>
         </View>
         <View style={styles.card}>
           <Icon name="flash" size={30} color="orange" />
-          <Text style={styles.textCard}>Overview 2</Text>
+          <Text style={styles.textCard}>{correctGuesses} correct guesses</Text>
         </View>
       </View>
 
@@ -193,7 +202,6 @@ const UserProfileScreen = () => {
       </View>
 
       <Text style={styles.title}>Your most recent caught birds</Text>
-
       <View style={styles.bottomCardContainer}>
         <View style={styles.birdsCard}>
           <View style={styles.birdsList}>
@@ -211,6 +219,9 @@ const UserProfileScreen = () => {
           </View>
         </View>
       </View>
+      <Pressable onPress={LogOut} style={styles.button}>
+        <Text style={styles.buttonText}>Log Out</Text>
+      </Pressable>
     </View>
 
   );
@@ -359,7 +370,21 @@ dingdingIcon: {
     color: '#fff',
     fontSize: 18,
     marginTop: 10,
-  }
+  },
+  button: {
+    backgroundColor: "#9c1c1c",
+    paddingVertical: 7,
+    borderRadius: 8,
+    marginTop: 50,
+    alignItems: "center",
+    width: 90,
+    alignSelf: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 });
 
 export default UserProfileScreen;
