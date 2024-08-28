@@ -54,10 +54,7 @@ export default function Tabs() {
         >
           {() => (
             <HomeStack.Navigator>
-              <HomeStack.Screen
-                name="User Profile"
-                component={UserProfileScreen}
-              />
+              <HomeStack.Screen name="Profile" component={UserProfileScreen} />
               <HomeStack.Screen name="Ranking" component={RankingScreen} />
               <HomeStack.Screen
                 name="Caught Birds"
@@ -93,7 +90,7 @@ export default function Tabs() {
         />
 
         <Tab.Screen
-          name="Caught Birds Page"
+          name="Birds Collection"
           component={CaughtBirdsScreen}
           options={{
             tabBarShowLabel: false,
