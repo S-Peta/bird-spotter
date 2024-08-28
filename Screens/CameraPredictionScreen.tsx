@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   Pressable,
-  Modal
+  Modal,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import * as tf from "@tensorflow/tfjs";
@@ -26,12 +26,10 @@ import {
 } from "../utils/updateUserPoints";
 
 import postCaughtBird from "../utils/postCaughtBird";
-import React from "react";
 
 import Feather from "@expo/vector-icons/Feather";
 
-
-const PredictionPage = ({navigation}) => {
+const PredictionPage = ({ navigation }) => {
   const [model, setModel] = useState<tf.LayersModel | null>(null);
   const [image, setImage] = useState<string | null>(null);
   const [prediction, setPrediction] = useState<string | null>(null);
@@ -140,7 +138,7 @@ const PredictionPage = ({navigation}) => {
           <Text style={styles.text}>Predicting...</Text>
         </View>
       )}
-            {prediction && (
+      {prediction && (
         <>
           <Text style={styles.prediction}> Prediction is finished! </Text>
           <Pressable

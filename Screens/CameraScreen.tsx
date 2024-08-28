@@ -62,11 +62,6 @@ const CameraScreen = ({ navigation }) => {
         </View>
       </Modal>
     </View>
-  )
-}
-
-export default CameraScreen
-
   );
 };
 
@@ -123,4 +118,3 @@ const styles = StyleSheet.create({
 });
 
 export default CameraScreen;
-
