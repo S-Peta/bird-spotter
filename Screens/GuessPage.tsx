@@ -15,7 +15,7 @@ import React from "react";
 import { useState } from "react";
 import { updateUserTenPoints } from "../utils/updateUserPoints";
 import { updateUserTwentyPoints } from "../utils/updateUserPoints";
-import { Itim_400Regular } from "@expo-google-fonts/itim";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const GuessPage = ({ route, navigation }: { route: any; navigation: any }) => {
   const [guessBird, setGuessBird] = useState("");
@@ -23,9 +23,8 @@ const GuessPage = ({ route, navigation }: { route: any; navigation: any }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { predictedBird, imageUrl } = route.params;
   const onSubmit = () => {
-
     if (guessBird.trim() === predictedBird) {
-      setResult(`Yaay, You Correct! \n+10 Points`);
+      setResult(`Yaay, You Correct! \n\n+10 Points`);
       setModalVisible(true);
       updateUserTenPoints();
     } else {
@@ -36,11 +35,8 @@ const GuessPage = ({ route, navigation }: { route: any; navigation: any }) => {
     }
   };
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-      <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <KeyboardAwareScrollView>
         <Text style={styles.headertext}>Guess the Bird</Text>
         <Image
           style={styles.img}
@@ -85,8 +81,8 @@ const GuessPage = ({ route, navigation }: { route: any; navigation: any }) => {
             </View>
           </Modal>
         </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -112,7 +108,6 @@ const styles = StyleSheet.create({
   headertext: {
     fontSize: 40,
     fontWeight: "bold",
-    fontFamily: "Itim_400Regular",
 
     marginBottom: 50,
     textAlign: "center",
