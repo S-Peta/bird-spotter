@@ -7,7 +7,8 @@ import {
   StyleSheet,
   Dimensions,
   Pressable,
-  Modal
+  Modal,
+  SafeAreaView,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import * as tf from "@tensorflow/tfjs";
@@ -26,18 +27,28 @@ import {
 } from "../utils/updateUserPoints";
 
 import postCaughtBird from "../utils/postCaughtBird";
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 import Feather from "@expo/vector-icons/Feather";
 
-
-const PredictionPage = ({navigation}) => {
+const PredictionPage = ({ navigation }) => {
   const [model, setModel] = useState<tf.LayersModel | null>(null);
   const [image, setImage] = useState<string | null>(null);
   const [prediction, setPrediction] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPredicting, setIsPredicting] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   const { width, height } = Dimensions.get("window");
+
+  useEffect(() => {
+    if (prediction) {
+      setModalVisible(true);
+    }
+  }, [prediction]);
 
   const handleModelLoad = (loadedModel) => {
     setModel(loadedModel);
@@ -46,10 +57,12 @@ const PredictionPage = ({navigation}) => {
 
   const handleImageSelect = (imageUri) => {
     setImage(imageUri);
+    setShowPreview(true);
   };
 
   const handleCapture = (imageUri) => {
     setImage(imageUri);
+    setShowPreview(true);
   };
 
   const handlePredict = () => {
@@ -104,41 +117,42 @@ const PredictionPage = ({navigation}) => {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={{ width, height }}>
-        <CameraShot
-          onCapture={handleCapture}
-          isPredicting={isPredicting}
-          isLoading={isLoading}
-        />
-      </View>
+    <SafeAreaView style={styles.container}>
       {isLoading && <ActivityIndicator size="large" />}
-      <View style={styles.imageSelectOverlay}>
+      <View style={styles.contentContainer}>
+        {image && showPreview ? (
+          <ImagePreview imageUri={image} />
+        ) : (
+          <CameraShot
+            onCapture={handleCapture}
+            isPredicting={isPredicting}
+            isLoading={isLoading}
+          />
+        )}
+      </View>
+
+      <View style={styles.controlsContainer}>
         <ModelLoader onModelLoad={handleModelLoad} />
         <ImageSelector
           onImageSelect={handleImageSelect}
           disabled={!model || isPredicting}
         />
-      </View>
-      <ImagePreview imageUri={image} />
-      {image && !isPredicting && (
-        <View style={styles.overlay}>
-          <Pressable onPress={handlePredict}>
+
+        {image && !isPredicting && (
+          <Pressable onPress={handlePredict} style={styles.predictButton}>
             <Feather name="eye" size={100} color={"#fff"} />
-            <PredictionDisplay
-              prediction={prediction}
-              isPredicting={isPredicting}
-            />
+            <Text style={styles.predictButtonText}>Predict</Text>
           </Pressable>
-        </View>
-      )}
+        )}
+      </View>
       {isPredicting && (
         <View style={styles.activityOverlay}>
           <ActivityIndicator size="large" />
           <Text style={styles.text}>Predicting...</Text>
         </View>
       )}
-            {prediction && (
+      <PredictionDisplay prediction={prediction} isPredicting={isPredicting} />
+      {prediction && (
         <>
           <Text style={styles.prediction}> Prediction is finished! </Text>
           <Pressable
@@ -192,48 +206,55 @@ const PredictionPage = ({navigation}) => {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
+  },
+  contentContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  controlsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: 20,
+    backgroundColor: "#f0f0f0",
+  },
+  predictButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#729c7f",
+    padding: 10,
+    borderRadius: 5,
+  },
+  predictButtonText: {
+    color: "#fff",
+    marginLeft: 5,
+    fontWeight: "bold",
   },
   prediction: {
     fontSize: 18,
     marginVertical: 16,
   },
-  overlay: {
-    position: "absolute",
-    bottom: 200,
-    zIndex: 10,
-    width: "100%",
-    alignItems: "center",
-    padding: 20,
-  },
-  imageSelectOverlay: {
-    position: "absolute",
-    bottom: 50,
-    zIndex: 10,
-    width: "100%",
-    alignItems: "flex-end",
-    padding: 20,
-  },
   activityOverlay: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    zIndex: 20,
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
     fontSize: 18,
     textAlign: "center",
     marginTop: 10,
     marginBottom: 10,
-    color: "#555",
+    color: "#fff",
   },
   centeredView: {
     flex: 1,
@@ -255,6 +276,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    zIndex: 40,
   },
   button: {
     borderRadius: 20,

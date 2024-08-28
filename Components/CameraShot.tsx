@@ -5,6 +5,7 @@ import React, {
   StyleSheet,
   TouchableOpacity,
   Button,
+  Dimensions,
 } from "react-native";
 import { useEffect, useState, useRef } from "react";
 import { Camera } from "expo-camera/legacy";
@@ -12,8 +13,9 @@ import CameraPreview from "./CameraPreview";
 import * as MediaLibrary from "expo-media-library";
 import Feather from "@expo/vector-icons/Feather";
 
+const { width, height } = Dimensions.get("window");
+
 export default function CameraShot({ onCapture, isPredicting, isLoading }) {
-  console.log("camershot being rendered");
   const cameraRef = useRef<Camera>(null);
   const [hasPermission, setHasPermission] = useState(false);
   const [capturedImage, setCapturedImage] = useState<any>(null);
@@ -68,31 +70,28 @@ export default function CameraShot({ onCapture, isPredicting, isLoading }) {
 
   return (
     <View style={styles.container}>
-      <Camera
-        style={[styles.camera, isPredicting ? { display: "none" } : {}]}
-        ref={cameraRef}
-      />
-      <View style={[styles.preview, showPreview ? {} : { display: "none" }]}>
-        {capturedImage && (
-          <CameraPreview
-            photo={capturedImage}
-            savePhoto={savePhoto}
-            retakePicture={retakePicture}
-            isPredicting={isPredicting}
-          />
-        )}
-      </View>
-      <View style={styles.buttonContainer}>
-        {!showPreview && !isLoading && (
-          <TouchableOpacity
-            style={[styles.button, isPredicting ? { opacity: 0.5 } : {}]}
-            onPress={takePicture}
-            disabled={isPredicting}
-          >
-            <Feather name="camera" size={100} color={"#fff"} />
-          </TouchableOpacity>
-        )}
-      </View>
+      {!showPreview ? (
+        <Camera style={[styles.camera]} ref={cameraRef}>
+          <View style={styles.buttonContainer}>
+            {!isLoading && (
+              <TouchableOpacity
+                style={[styles.button, isPredicting ? { opacity: 0.5 } : {}]}
+                onPress={takePicture}
+                disabled={isPredicting}
+              >
+                <Feather name="camera" size={100} color={"#fff"} />
+              </TouchableOpacity>
+            )}
+          </View>
+        </Camera>
+      ) : (
+        <CameraPreview
+          photo={capturedImage}
+          savePhoto={savePhoto}
+          retakePicture={retakePicture}
+          isPredicting={isPredicting}
+        />
+      )}
     </View>
   );
 }
@@ -100,9 +99,8 @@ export default function CameraShot({ onCapture, isPredicting, isLoading }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    width: width,
+    height: height,
   },
   button: {
     width: 100,
@@ -112,11 +110,14 @@ const styles = StyleSheet.create({
     height: 100,
     alignItems: "center",
     justifyContent: "center",
+    bottom: 20,
   },
   buttonContainer: {
-    position: "absolute",
-    bottom: 100,
-    alignSelf: "center",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    margin: 20,
+    backgroundColor: "transparent",
   },
   text: {
     color: "#fff",
@@ -127,6 +128,7 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
     width: "100%",
+    height: "100%",
     backgroundColor: "blue",
   },
   preview: {
