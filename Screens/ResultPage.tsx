@@ -1,13 +1,23 @@
-import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect } from "react";
 import { getPageTitleAndId, getBirdSummary } from "../api";
 import { useState } from "react";
 
 import { formatString, convertHTMLToText } from "../utils/formatData";
+import { AntDesign } from "@expo/vector-icons";
 
 import { getABirdImageUrl } from "../utils/getData";
 import { ScrollView } from "react-native-gesture-handler";
 import { Itim_400Regular } from "@expo-google-fonts/itim";
+import Constants from "expo-constants";
 
 const ResultPage = ({ route, navigation }) => {
   const [url, setUrl] = useState<string>("");
@@ -31,14 +41,24 @@ const ResultPage = ({ route, navigation }) => {
 
   return (
     <View>
-      <ScrollView>
-        <View style={styles.container}>
-          <Text style={styles.text}>{formatString(predictedBird)}</Text>
-          <Image source={{ uri: url }} style={styles.image} />
-          <Text style={styles.descriptionTitle}>Description</Text>
-          <Text style={styles.description}>{birdDescription}</Text>
-        </View>
-      </ScrollView>
+      <SafeAreaView style={styles.screen}>
+        <ScrollView>
+          <View style={styles.container}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Birds Collection");
+              }}
+              style={styles.closeButton}
+            >
+              <AntDesign name="closecircleo" size={18} color="rblack" />
+            </TouchableOpacity>
+            <Text style={styles.text}>{formatString(predictedBird)}</Text>
+            <Image source={{ uri: url }} style={styles.image} />
+            <Text style={styles.descriptionTitle}>Description</Text>
+            <Text style={styles.description}>{birdDescription}</Text>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </View>
   );
 };
@@ -103,10 +123,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: "#f5f4e4",
   },
-
-  // title: {
-  //   fontSize: 18,
-  //   fontWeight: "bold",
-  //   alignSelf: "center",
-  // },
+  screen: {
+    paddingTop: Constants.statusBarHeight,
+  },
+  closeButton: {
+    borderRadius: 10,
+    alignSelf: "flex-end",
+    marginTop: 0,
+  },
 });
