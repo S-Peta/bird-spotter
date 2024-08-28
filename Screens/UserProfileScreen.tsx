@@ -226,7 +226,6 @@ const UserProfileScreen = () => {
         <Text style={styles.buttonText}>Log Out</Text>
       </Pressable>
     </View>
-
   );
 };
 
@@ -242,7 +241,7 @@ const styles = StyleSheet.create({
   pointsContainer: {
     position: 'absolute',
     top: 10,
-    right: 20,
+    right: 10,
     backgroundColor: '#333',
     borderRadius: 20,
     paddingHorizontal: 10,
@@ -250,16 +249,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-pointsText: {
+  pointsText: {
     fontSize: 14,
     color: 'white',
     fontWeight: 'bold',
-},
-dingdingIcon: {
-  marginRight: 5,
-  color: 'yellow',
-  fontSize: 18,
-},
+  },
+  dingdingIcon: {
+    marginRight: 5,
+    color: 'yellow',
+    fontSize: 18,
+  },
   avatarContainer: {
     alignItems: 'center',
     marginTop: -90,
@@ -287,15 +286,9 @@ dingdingIcon: {
   },
   progressBarContainer: {
     alignSelf: 'center',
-    marginTop: 20,
-  },
-  progressBar: {
-    alignSelf: "center",
-    marginTop: 20,
+    marginTop: 15,
     marginBottom: 5,
-    borderRadius: 10,
-    height: 15,
-    backgroundColor: 'red'
+
   },
   progressText: {
     fontSize: 16,
@@ -324,6 +317,11 @@ dingdingIcon: {
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+
   },
   textCard: {
     fontFamily: 'Itim_400Regular',
@@ -340,7 +338,12 @@ dingdingIcon: {
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom: 15
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+
   },
   birdsCard: {
     backgroundColor: '#dcdcdc',
@@ -349,6 +352,11 @@ dingdingIcon: {
     borderRadius: 5,
     justifyContent: 'center',
     padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+
   },
   birdsList: {
     flexDirection: 'row',
@@ -361,6 +369,7 @@ dingdingIcon: {
     borderRadius: 5,
     marginHorizontal: 5,
     resizeMode: 'contain',
+    shadowColor: '#000',
   },
   icon: {
     margin: 10,
@@ -381,7 +390,7 @@ dingdingIcon: {
     fontSize: 16,
     fontWeight: "bold",
     alignSelf: "center",
-    marginTop: 20
+    marginTop: 12
   },
 });
 
