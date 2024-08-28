@@ -11,7 +11,7 @@ export type RootStackParamList = {
         species: string;
         url: string;
         scientificName: string,
-        species_id: string
+        species_id?: string
     };
     "Login": undefined;
     "Main": undefined;
