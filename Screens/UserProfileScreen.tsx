@@ -1,58 +1,92 @@
-import { View, Text, Button, StyleSheet, Pressable, Image, TouchableOpacity, Alert, SectionList } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, Alert, FlatList, Pressable, Animated, StyleSheet } from 'react-native';
 import { firebase_auth, db, storage } from '../index';
+import { getCaughtBirds, getCaughtBirdScientificName, getBirdsImageUrls, getStreaksForUser, getGuessesForUser, getPointsForUser } from '../utils/getData';
 import { signOut, getAuth, updateProfile } from "firebase/auth";
-import { getCaughtBirds, getCaughtBirdSpecies, getPointsForUser, getBirds, getBirdsImageUrls, getCaughtBirdScientificName, getStreaksForUser, getGuessesForUser} from '../utils/getData';
-import { useNavigation, NavigationProp} from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { useContext } from 'react';
 import { PointsContext } from '../Contexts/Points';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { useFonts } from 'expo-font';
-import { Itim_400Regular } from '@expo-google-fonts/itim';
+import { StatusBar } from 'expo-status-bar';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc } from 'firebase/firestore';
 import * as Progress from 'react-native-progress';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { FlatList } from 'react-native-gesture-handler';
 import { RootStackParamList } from '../types';
-import { Log } from '@tensorflow/tfjs';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 const UserProfileScreen = () => {
   const auth = firebase_auth;
   const userAuth = getAuth();
   const user = userAuth.currentUser!;
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const userUsername = user.email?.split('@')[0];
+  const formattedUsername = userUsername ? userUsername.charAt(0).toUpperCase() + userUsername.slice(1) : 'User';
 
   const defaultUser = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCFoiI5GIjAzBXk4FCP0PhikiWkT5cbBQi492KoVj6hXm1W2zppE3hBQ6fdL07Wv-PYjU&usqp=CAU';
 
-  const defaultImageUri = 'https://www.momscleanairforce.org/wp-content/uploads/2020/11/birds_sky.jpg';
+  const defaultImageUri = 'https://www.shutterstock.com/image-photo/green-forest-tree-leaves-sun-600nw-1010879791.jpg';
 
   const { points, setPoints } = useContext(PointsContext);
   const [totalCaughtBirds, setTotalCaughtBirds] = useState(0);
   const [avatar, setAvatar] = useState(user?.photoURL || defaultUser);
   const [uploading, setUploading] = useState(false);
-  const[mostRecentBirds, setMostRecentBirds] = useState<
-  { species: string; url: string, scientificName: string}[]
->([]);
-const [daysStreak, setDaysStreak] = useState(0)
-const [correctGuesses, setCorrectGuesses] = useState(0)
+  const [mostRecentBirds, setMostRecentBirds] = useState([]);
+  const [daysStreak, setDaysStreak] = useState(0);
+  const [correctGuesses, setCorrectGuesses] = useState(0);
+  const [animatedProgress] = useState(new Animated.Value(0));
 
-  if (user) {
-    getPointsForUser(user.uid).then((userPoints) => {
-      setPoints(userPoints);
-    });
-  }
+  const totalBirds = 521;
 
-  const LogOut = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.log(error);
-      alert('Sign Out failed' + error.message);
+  const progress = totalCaughtBirds / totalBirds;
+
+  useEffect(() => {
+    Animated.timing(animatedProgress, {
+      toValue: progress,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  }, [progress]);
+
+  useEffect(() => {
+    async function getImages() {
+      if (user) {
+        try {
+          const caughtBirds = await getCaughtBirds(user.uid);
+          setTotalCaughtBirds(caughtBirds.length);
+
+          const recentCaughtBirds = await getCaughtBirds(user.uid, 3);
+          const formattedBirdNames = recentCaughtBirds.map(bird => bird.species);
+
+          const scientificNames = await Promise.all(formattedBirdNames.map(async (bird) => {
+            return await getCaughtBirdScientificName(bird);
+          }));
+
+          const urls = await getBirdsImageUrls(formattedBirdNames);
+          const imageObjects = formattedBirdNames.map((species, index) => ({
+            species,
+            url: urls[index],
+            scientificName: scientificNames[index],
+          }));
+
+          setMostRecentBirds(imageObjects);
+        } catch (err) {
+          console.log(err);
+        }
+      }
     }
-  };
+
+    getImages();
+
+    getStreaksForUser(user.uid).then(streak => setDaysStreak(streak));
+    getGuessesForUser(user.uid).then(guesses => setCorrectGuesses(guesses));
+    getPointsForUser(user.uid).then(userPoints => setPoints(userPoints));
+  }, [totalCaughtBirds]);
+
+  function handlePress(species: string, url:string, scientificName: string) {
+    navigation.navigate('Single Bird', { species, url, scientificName})
+  }
 
   const goToRankingPage = () => {
     navigation.navigate('Ranking');
@@ -109,50 +143,15 @@ const [correctGuesses, setCorrectGuesses] = useState(0)
     });
   };
 
-  const totalBirds = 521;
-  useEffect(() => {
-    async function getImages() {
-      if (user){
-        try {
-          const caughtBirds = await getCaughtBirds(user.uid)
-          setTotalCaughtBirds(caughtBirds.length)
-          const recentCaughtBirds = await getCaughtBirds(user.uid, 3)
-          const formattedBirdNames = recentCaughtBirds.map((bird) => {
-            return bird.species
-          })
-        const scientificNames = await Promise.all(formattedBirdNames.map(async (bird) => {
-          const scientificName = await getCaughtBirdScientificName(bird)
-          return scientificName
-        }))
-          const urls = await getBirdsImageUrls(formattedBirdNames);
-          const imageObjects = formattedBirdNames.map((species, index) => ({
-            species,
-            url: urls[index],
-            scientificName: scientificNames[index]
-          }))
-          setMostRecentBirds(imageObjects)
-        } catch (err) {
-          console.log(err)
-        }
-      } 
-     
+  const LogOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.log(error);
+      alert('Sign Out failed' + error.message);
     }
-    getImages()
-    getStreaksForUser(user.uid)
-    .then((streak) => {
-      setDaysStreak(streak)
-    })
-    getGuessesForUser(user.uid)
-    .then((guesses) => {
-      setCorrectGuesses(guesses)
-    })
-  }, [daysStreak, correctGuesses])
-  const progress = totalCaughtBirds / totalBirds
-  function handlePress(species: string, url:string, scientificName: string) {
-    navigation.navigate('Single Bird', { species, url, scientificName})
-  }
-  const userUsername = user.email?.split('@')[0];
-  const formattedUsername = userUsername ? userUsername.charAt(0).toUpperCase() + userUsername.slice(1) : 'User';
+  };
+
   return (
     <View>
       <StatusBar backgroundColor='gray' />
@@ -160,25 +159,29 @@ const [correctGuesses, setCorrectGuesses] = useState(0)
         <Image source={{ uri: defaultImageUri }} resizeMode='cover' style={styles.headerImage} />
         <View style={styles.pointsContainer}>
           <AntDesign name="dingding" style={styles.dingdingIcon} />
-        <Text style={styles.pointsText}>{points}</Text>
-      </View>
+          <Text style={styles.pointsText}>{points}</Text>
+        </View>
       </View>
 
       <View style={styles.avatarContainer}>
-        <Image
-          source={{ uri: avatar || defaultUser }}
-          resizeMode='contain'
-          style={styles.avatar}
-        />
+        <Image source={{ uri: avatar }} resizeMode='cover' style={styles.avatar} />
         <TouchableOpacity style={styles.cameraIcon} onPress={pickImage} disabled={uploading}>
           <FontAwesome name="camera" size={16} color="white" />
         </TouchableOpacity>
-        <Text style={styles.username}>
-        @{formattedUsername}
-        </Text>
+        <Text style={styles.username}>@{formattedUsername}</Text>
       </View>
 
-      <Progress.Bar style={styles.progressBar} progress={progress} width={300} color="#4caf50"/>
+      <Animated.View style={styles.progressBarContainer}>
+        <Progress.Bar
+          progress={progress}
+          width={300}
+          color="#b1b3b5"
+          borderRadius={10}
+          height={15}
+          animated
+        />
+      </Animated.View>
+
       <Text style={styles.progressText}>{totalCaughtBirds}/{totalBirds} birds caught</Text>
 
       <Text style={styles.title}>Overview</Text>
@@ -205,7 +208,7 @@ const [correctGuesses, setCorrectGuesses] = useState(0)
       <View style={styles.bottomCardContainer}>
         <View style={styles.birdsCard}>
           <View style={styles.birdsList}>
-            <FlatList 
+            <FlatList
             data={mostRecentBirds}
             horizontal
             renderItem={({item}) => (
@@ -219,7 +222,7 @@ const [correctGuesses, setCorrectGuesses] = useState(0)
           </View>
         </View>
       </View>
-      <Pressable onPress={LogOut} style={styles.button}>
+      <Pressable onPress={LogOut}>
         <Text style={styles.buttonText}>Log Out</Text>
       </Pressable>
     </View>
@@ -239,44 +242,40 @@ const styles = StyleSheet.create({
   pointsContainer: {
     position: 'absolute',
     top: 10,
-    right: 10,
-    width: 50,
-    height: 50,
-    borderRadius: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    justifyContent: 'center',
+    right: 20,
+    backgroundColor: '#333',
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    flexDirection: 'row',
     alignItems: 'center',
-},
+  },
 pointsText: {
     fontSize: 14,
     color: 'white',
     fontWeight: 'bold',
-    position: 'absolute',
-    bottom: 8,
-    textAlign: 'center',
 },
 dingdingIcon: {
-    position: 'absolute',
-    top: 8,
-    color: 'gold',
-    fontSize: 16,
+  marginRight: 5,
+  color: 'yellow',
+  fontSize: 18,
 },
   avatarContainer: {
     alignItems: 'center',
     marginTop: -90,
   },
   avatar: {
-    height: 155,
-    width: 155,
+    height: 125,
+    width: 125,
     borderRadius: 999,
-    borderColor: 'green',
+    borderColor: '#fff',
     borderWidth: 2,
   },
   cameraIcon: {
     position: 'absolute',
     bottom: 40,
-    right: 120,
-    backgroundColor: '#4CAF50',
+    right: 130,
+    backgroundColor: '#333',
     borderRadius: 20,
     padding: 8,
   },
@@ -286,12 +285,17 @@ dingdingIcon: {
     fontWeight: 'bold',
     fontFamily: 'Itim_400Regular',
   },
+  progressBarContainer: {
+    alignSelf: 'center',
+    marginTop: 20,
+  },
   progressBar: {
     alignSelf: "center",
     marginTop: 20,
     marginBottom: 5,
     borderRadius: 10,
-    height: 20
+    height: 15,
+    backgroundColor: 'red'
   },
   progressText: {
     fontSize: 16,
@@ -356,6 +360,7 @@ dingdingIcon: {
     height: 90,
     borderRadius: 5,
     marginHorizontal: 5,
+    resizeMode: 'contain',
   },
   icon: {
     margin: 10,
@@ -371,19 +376,12 @@ dingdingIcon: {
     fontSize: 18,
     marginTop: 10,
   },
-  button: {
-    backgroundColor: "#9c1c1c",
-    paddingVertical: 7,
-    borderRadius: 8,
-    marginTop: 50,
-    alignItems: "center",
-    width: 90,
-    alignSelf: "center",
-  },
   buttonText: {
-    color: "#fff",
+    color: "#bababa",
     fontSize: 16,
     fontWeight: "bold",
+    alignSelf: "center",
+    marginTop: 20
   },
 });
 

@@ -27,10 +27,7 @@ import {
 } from "../utils/updateUserPoints";
 
 import postCaughtBird from "../utils/postCaughtBird";
-<<<<<<< HEAD
-=======
 
->>>>>>> main
 import Feather from "@expo/vector-icons/Feather";
 
 const PredictionPage = ({ navigation }) => {

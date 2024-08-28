@@ -85,13 +85,8 @@ export default function Tabs() {
         />
 
         <Tab.Screen
-<<<<<<< HEAD
           name="Caught Birds"
           // component={CaughtBirdsScreen}
-=======
-          name="Birds Collection"
-          component={CaughtBirdsScreen}
->>>>>>> main
           options={{
             headerShown: false,
             tabBarShowLabel: false,
