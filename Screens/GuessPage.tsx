@@ -24,7 +24,7 @@ const GuessPage = ({ route, navigation }: { route: any; navigation: any }) => {
   const { predictedBird, imageUrl } = route.params;
   const onSubmit = () => {
     if (guessBird === predictedBird) {
-      setResult(`Yaay, You Correct! \n+10 Points`);
+      setResult(`Yaay, that's orrect! \n+10 Points`);
       setModalVisible(true);
       updateUserTenPoints();
     } else {
