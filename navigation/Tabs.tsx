@@ -89,8 +89,8 @@ export default function Tabs() {
         />
 
         <Tab.Screen
-          name="Caught Birds Page"
-          component={MapScreen}
+          name="Caught Birds"
+          component={CaughtBirdsScreen}
           options={{
             tabBarShowLabel: false,
             tabBarIcon: ({ focused }) => {
@@ -107,6 +107,26 @@ export default function Tabs() {
             },
           }}
         />
+
+        {/* <Tab.Screen
+          name="Guess Page"
+          component={GuessPage}
+          options={{
+            tabBarShowLabel: false,
+            tabBarIcon: ({ focused }) => {
+              return (
+                <View
+                  style={{ alignItems: "center", justifyContent: "center" }}
+                >
+                  <Entypo name="book" size={24}
+                    color={focused ? "orange" : "black"}
+                  />
+                  {/* <Text style={{ fontSize: 12, color: "#162478" }}>Map</Text> */}
+                {/* </View>
+              );
+            },
+          }}
+        /> */} 
 
         <Tab.Screen
           name="Camera Page"
