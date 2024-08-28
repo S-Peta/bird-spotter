@@ -1,4 +1,6 @@
-import React, { Image, View, StyleSheet } from "react-native";
+import React, { Image, View, StyleSheet, Dimensions } from "react-native";
+
+const { width, height } = Dimensions.get("window");
 
 export default function ImagePreview({ imageUri }) {
   if (!imageUri) {
@@ -14,15 +16,16 @@ export default function ImagePreview({ imageUri }) {
 
 const styles = StyleSheet.create({
   imageContainer: {
-    flex: 1,
+    width: width,
+    height: height * 0.7,
     alignItems: "center",
+    justifyContent: "center",
     margin: 5,
     backgroundColor: "#f0f0f0",
-    borderRadius: 10,
-    padding: 10,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
   },
 });

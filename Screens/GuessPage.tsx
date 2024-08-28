@@ -23,11 +23,13 @@ const GuessPage = ({ route, navigation }: { route: any; navigation: any }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { predictedBird, imageUrl } = route.params;
   const onSubmit = () => {
-    if (guessBird === predictedBird) {
+    if (guessBird.trim() === predictedBird) {
       setResult(`Yaay, You Correct! \n+10 Points`);
       setModalVisible(true);
       updateUserTenPoints();
     } else {
+      console.log(guessBird.length, "guessBird length");
+      console.log(predictedBird.length, "predictedBird length");
       setResult(`It is not a ${guessBird}...`);
       setModalVisible(true);
     }

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { getPageTitleAndId, getBirdSummary } from "../api";
 import { useState } from "react";
 
-import { formatString, convertHTMLToText } from "../utils/formatString";
+import { formatString, convertHTMLToText } from "../utils/formatData";
 
 import { getABirdImageUrl } from "../utils/getData";
 import { ScrollView } from "react-native-gesture-handler";
