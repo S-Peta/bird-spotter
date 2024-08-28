@@ -83,6 +83,7 @@ export default function MapScreen() {
     getUserLocation();
   }, []);
   const snapPoints = useMemo(() => ["10", "50%", "90%"], []);
+  
   return (
     <View>
       <MapView style={styles.map} region={mapRegion}>
