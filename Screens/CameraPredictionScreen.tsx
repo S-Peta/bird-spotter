@@ -44,6 +44,7 @@ const PredictionPage = ({ navigation }) => {
   useEffect(() => {
     if (prediction) {
       setModalVisible(true);
+      postCaughtBird(prediction, 0, 0);
     }
   }, [prediction]);
 
@@ -105,7 +106,7 @@ const PredictionPage = ({ navigation }) => {
 
         setPrediction(species);
         setIsPredicting(false);
-        setImage(null);
+        // setImage(null);
       } catch (error) {
         console.error("error during prediction", error);
       }
@@ -149,20 +150,6 @@ const PredictionPage = ({ navigation }) => {
         </View>
       )}
       <PredictionDisplay prediction={prediction} isPredicting={isPredicting} />
-      {prediction && (
-        <>
-          <Text style={styles.prediction}> Prediction is finished! </Text>
-          <Pressable
-            style={[styles.button, styles.buttonOpen]}
-            onPress={() => {
-              setModalVisible(true);
-              postCaughtBird(prediction, 0, 0);
-            }}
-          >
-            <Text style={styles.textStyle}>Continue</Text>
-          </Pressable>
-        </>
-      )}
 
       <Modal
         animationType="slide"
@@ -183,6 +170,7 @@ const PredictionPage = ({ navigation }) => {
                   predictedBird: prediction,
                   imageUrl: image,
                 });
+                setImage(null);
                 updateUserTwentyPoints();
               }}
             >

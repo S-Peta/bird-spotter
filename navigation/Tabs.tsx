@@ -147,7 +147,7 @@ export default function Tabs() {
               <CameraStack.Screen
                 name="Result Page"
                 component={ResultPage}
-                options={{ headerShown: true }}
+                options={{ headerShown: false }}
               />
             </CameraStack.Navigator>
           )}
