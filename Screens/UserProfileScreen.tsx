@@ -1,9 +1,9 @@
-import { View, Text, Button, StyleSheet, Pressable, Image, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Button, StyleSheet, Pressable, Image, TouchableOpacity, Alert, SectionList } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { firebase_auth, db, storage } from '../index';
 import { signOut, getAuth, updateProfile } from "firebase/auth";
-import { getCaughtBirds, getCaughtBirdSpecies, getPointsForUser } from '../utils/getData';
-import { useNavigation } from '@react-navigation/native';
+import { getCaughtBirds, getCaughtBirdSpecies, getPointsForUser, getBirds, getBirdsImageUrls, getCaughtBirdScientificName} from '../utils/getData';
+import { useNavigation, NavigationProp} from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { useContext } from 'react';
 import { PointsContext } from '../Contexts/Points';
@@ -16,12 +16,13 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc } from 'firebase/firestore';
 import * as Progress from 'react-native-progress';
 import AntDesign from '@expo/vector-icons/AntDesign';
-
+import { FlatList } from 'react-native-gesture-handler';
+import { RootStackParamList } from '../types';
 const UserProfileScreen = () => {
   const auth = firebase_auth;
   const userAuth = getAuth();
-  const user = userAuth.currentUser;
-  const navigation = useNavigation();
+  const user = userAuth.currentUser!;
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const defaultUser = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCFoiI5GIjAzBXk4FCP0PhikiWkT5cbBQi492KoVj6hXm1W2zppE3hBQ6fdL07Wv-PYjU&usqp=CAU';
 
@@ -31,11 +32,9 @@ const UserProfileScreen = () => {
   const [totalCaughtBirds, setTotalCaughtBirds] = useState(0);
   const [avatar, setAvatar] = useState(user?.photoURL || defaultUser);
   const [uploading, setUploading] = useState(false);
-
-  let [fontsLoaded] = useFonts({
-    Itim_400Regular
-  });
-
+  const[mostRecentBirds, setMostRecentBirds] = useState<
+  { species: string; url: string, scientificName: string}[]
+>([]);
 
   if (user) {
     getPointsForUser(user.uid).then((userPoints) => {
@@ -92,7 +91,7 @@ const UserProfileScreen = () => {
     }
   };
 
-  const uriToBlob = (uri) => {
+  const uriToBlob = (uri:string): Promise<Blob> => {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
@@ -109,16 +108,42 @@ const UserProfileScreen = () => {
 
   const totalBirds = 521;
   useEffect(() => {
-    if (user) {
-      getCaughtBirds(user.uid).then((data) => {
-        setTotalCaughtBirds(data.length);
-      });
+    async function getImages() {
+      if (user){
+        try {
+          const caughtBirds = await getCaughtBirds(user.uid)
+          setTotalCaughtBirds(caughtBirds.length)
+          const recentCaughtBirds = await getCaughtBirds(user.uid, 3)
+          const formattedBirdNames = recentCaughtBirds.map((bird) => {
+            return bird.species
+          })
+        const scientificNames = await Promise.all(formattedBirdNames.map(async (bird) => {
+          const scientificName = await getCaughtBirdScientificName(bird)
+          return scientificName
+        }))
+
+       
+          const urls = await getBirdsImageUrls(formattedBirdNames);
+          const imageObjects = formattedBirdNames.map((species, index) => ({
+            species,
+            url: urls[index],
+            scientificName: scientificNames[index]
+          }))
+          setMostRecentBirds(imageObjects)
+        } catch (err) {
+          console.log(err)
+        }
+      } 
+     
     }
+    getImages()
   }, [])
-
-
   const progress = totalCaughtBirds / totalBirds
-
+  function handlePress(species: string, url:string, scientificName: string) {
+    navigation.navigate('Single Bird', { species, url, scientificName})
+  }
+  const userUsername = user.email?.split('@')[0];
+  const formattedUsername = userUsername ? userUsername.charAt(0).toUpperCase() + userUsername.slice(1) : 'User';
   return (
     <View>
       <StatusBar backgroundColor='gray' />
@@ -139,8 +164,8 @@ const UserProfileScreen = () => {
         <TouchableOpacity style={styles.cameraIcon} onPress={pickImage} disabled={uploading}>
           <FontAwesome name="camera" size={16} color="white" />
         </TouchableOpacity>
-        <Text style={styles.username}>@
-          {user.email?.split('@')[0].charAt(0).toUpperCase() + user?.email?.split('@')[0].slice(1) || 'User'}
+        <Text style={styles.username}>
+        @{formattedUsername}
         </Text>
       </View>
 
@@ -172,9 +197,17 @@ const UserProfileScreen = () => {
       <View style={styles.bottomCardContainer}>
         <View style={styles.birdsCard}>
           <View style={styles.birdsList}>
-            <Image style={styles.birdImage} source={{ uri: defaultImageUri }} />
-            <Image style={styles.birdImage} source={{ uri: defaultImageUri }} />
-            <Image style={styles.birdImage} source={{ uri: defaultImageUri }} />
+            <FlatList 
+            data={mostRecentBirds}
+            horizontal
+            renderItem={({item}) => (
+                <Pressable  onPress={() => handlePress(item.species, item.url, item.scientificName)}>
+                <Image style={styles.birdImage} source={{ uri: item.url }} />
+              </Pressable>
+            )}
+            keyExtractor={(item) => item.species}
+            showsHorizontalScrollIndicator={false}>
+            </FlatList>
           </View>
         </View>
       </View>
@@ -311,6 +344,7 @@ dingdingIcon: {
     width: 90,
     height: 90,
     borderRadius: 5,
+    marginHorizontal: 5,
   },
   icon: {
     margin: 10,
@@ -325,7 +359,7 @@ dingdingIcon: {
     color: '#fff',
     fontSize: 18,
     marginTop: 10,
-  },
+  }
 });
 
 export default UserProfileScreen;

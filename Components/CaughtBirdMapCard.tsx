@@ -3,8 +3,8 @@ import React from 'react'
 
 const CaughtBirdMapCard = ({ caughtBird }) => {
   const defaultImageUri = 'https://t4.ftcdn.net/jpg/01/77/47/67/360_F_177476718_VWfYMWCzK32bfPI308wZljGHvAUYSJcn.jpg'
-
-
+  const userUsername = caughtBird.username;
+  const formattedUsername = userUsername.charAt(0).toUpperCase() + userUsername.slice(1)
   return (
     <View style={styles.card}>
       <Image
@@ -13,10 +13,10 @@ const CaughtBirdMapCard = ({ caughtBird }) => {
       />
       <View style={styles.rightContainer}>
         <Text style={styles.title}>{caughtBird.species}</Text>
-        <Text style={styles.description}>caughtBird.info</Text>
+        {/* <Text style={styles.description}>caughtBird.info</Text> */}
         <View style={styles.footer}>
-          <Text style={styles.description}>caughtBird user avatar</Text>
-          <Text style={styles.description}>caughtBird user usarname</Text>
+          {/* <Text style={styles.description}>caughtBird user avatar</Text> */}
+          <Text style={styles.description}>Spotted by: {formattedUsername}</Text>
         </View>
       </View>
     </View>

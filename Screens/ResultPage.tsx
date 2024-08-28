@@ -2,7 +2,9 @@ import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import React, { useEffect } from "react";
 import { getPageTitleAndId, getBirdSummary } from "../api";
 import { useState } from "react";
+
 import { formatString, convertHTMLToText } from "../utils/formatString";
+
 import { getABirdImageUrl } from "../utils/getData";
 import { ScrollView } from "react-native-gesture-handler";
 import { Itim_400Regular } from "@expo-google-fonts/itim";

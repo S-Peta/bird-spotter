@@ -1,6 +1,3 @@
-import * as tf from "@tensorflow/tfjs";
-import { Normalization } from "../assets/trained-model/EfficientNetB0_js_model/NormalizationLayer";
-tf.serialization.registerClass(Normalization);
 import {
   View,
   Text,
@@ -8,135 +5,142 @@ import {
   ActivityIndicator,
   Image,
   StyleSheet,
+  Dimensions,
   Pressable,
-  Modal,
+  Modal
 } from "react-native";
-import { bundleResourceIO, decodeJpeg } from "@tensorflow/tfjs-react-native";
-import { useState, useEffect } from "react";
-import * as ImagePicker from "expo-image-picker";
+import React, { useState, useEffect, useCallback } from "react";
+import * as tf from "@tensorflow/tfjs";
+import { decodeJpeg } from "@tensorflow/tfjs-react-native";
 import * as FileSystem from "expo-file-system";
+import ModelLoader from "../Components/ModelLoader";
 import getBirdSpecies from "../utils/getBirdSpecies";
-import requestPermissions from "../utils/requestPermissions";
+getBirdSpecies;
+import ImageSelector from "../Components/ImageSelector";
+import ImagePreview from "../Components/ImagePreview";
+import PredictionDisplay from "../Components/PredictionDisplay";
+import CameraShot from "../Components/CameraShot";
 import {
   updateUserTwentyPoints,
   updateUserTenPoints,
 } from "../utils/updateUserPoints";
+
 import postCaughtBird from "../utils/postCaughtBird";
 import React from "react";
 
-export default function PredictionPage({ navigation }) {
+import Feather from "@expo/vector-icons/Feather";
+
+
+const PredictionPage = ({navigation}) => {
   const [model, setModel] = useState<tf.LayersModel | null>(null);
   const [image, setImage] = useState<string | null>(null);
   const [prediction, setPrediction] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isPredicting, setIsPredicting] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      await requestPermissions();
-      await loadModel();
-    })();
-  }, []);
+  const { width, height } = Dimensions.get("window");
 
-  const loadModel = async () => {
-    setIsLoading(true);
-    try {
-      await tf.ready();
-
-      const modelJson = require("../assets/trained-model/EfficientNetB0_js_model/model.json");
-      const modelWeights = require("../assets/trained-model/EfficientNetB0_js_model/group1-shard.bin");
-
-      const loadedModel = await tf.loadLayersModel(
-        bundleResourceIO(modelJson, modelWeights)
-      );
-
-      setModel(loadedModel);
-    } catch (error) {
-      console.log("error loading model", error);
-    }
+  const handleModelLoad = (loadedModel) => {
+    setModel(loadedModel);
     setIsLoading(false);
   };
 
-  const selectImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
+  const handleImageSelect = (imageUri) => {
+    setImage(imageUri);
+  };
 
-    if (!result.canceled) {
-      const { uri } = result.assets[0];
-      setImage(uri);
-      if (model) {
-        predictImage(result.assets[0].uri);
-      }
+  const handleCapture = (imageUri) => {
+    setImage(imageUri);
+  };
+
+  const handlePredict = () => {
+    if (image) {
+      predictImage(image);
+    } else {
+      console.error("No image found");
     }
   };
 
-  async function predictImage(imageUri: string) {
-    setIsPredicting(true);
-    try {
-      const fileInfo = await FileSystem.getInfoAsync(imageUri);
-      if (!fileInfo.exists) {
-        console.error("Image file does not exist.");
-        return;
+  const predictImage = useCallback(
+    async (imageUri: string) => {
+      setIsPredicting(true);
+      try {
+        const fileInfo = await FileSystem.getInfoAsync(imageUri);
+        if (!fileInfo.exists) {
+          console.error("Image file does not exist.");
+          return;
+        }
+
+        const imageData = await FileSystem.readAsStringAsync(imageUri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+
+        const arrayBufferImageData = Uint8Array.from(atob(imageData), (c) =>
+          c.charCodeAt(0)
+        ).buffer;
+
+        const imageTensor = decodeJpeg(new Uint8Array(arrayBufferImageData));
+
+        const resizedImage = tf.image
+          .resizeBilinear(imageTensor, [224, 224])
+          .reshape([1, 224, 224, 3]);
+
+        const predictionTensor = (await model!.predict(
+          resizedImage
+        )) as tf.Tensor;
+        const predictionArray = await predictionTensor.data();
+
+        const predictionFloat32 = Float32Array.from(predictionArray);
+
+        const { species } = getBirdSpecies(predictionFloat32);
+
+        setPrediction(species);
+        setIsPredicting(false);
+        setImage(null);
+      } catch (error) {
+        console.error("error during prediction", error);
       }
-
-      const imageData = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      const arrayBufferImageData = Uint8Array.from(atob(imageData), (c) =>
-        c.charCodeAt(0)
-      ).buffer;
-
-      const imageTensor = decodeJpeg(new Uint8Array(arrayBufferImageData));
-
-      const resizedImage = tf.image
-        .resizeBilinear(imageTensor, [224, 224])
-        .reshape([1, 224, 224, 3]);
-
-      const predictionTensor = (await model!.predict(
-        resizedImage
-      )) as tf.Tensor;
-      const predictionArray = await predictionTensor.data();
-
-      const predictionFloat32 = Float32Array.from(predictionArray);
-      // const birdSpecies = getBirdSpecies(predictionFloat32);
-      const { species, confidence, predictionArrayIndex } =
-        getBirdSpecies(predictionFloat32);
-      console.log({
-        species: species,
-        confidence: confidence,
-        predictionArrayIndex: predictionArrayIndex,
-      });
-
-      setPrediction(species);
-      setIsPredicting(false);
-    } catch (error) {
-      console.error("error during prediction", error);
-    }
-  }
+    },
+    [model]
+  );
 
   return (
     <View style={styles.container}>
-      <Text>Bird Predictor</Text>
-      <Button
-        title="Select Image"
-        onPress={selectImage}
-        disabled={isLoading || !model}
-      />
-      {image && (
-        <Image
-          source={{ uri: image }}
-          style={{ width: 200, height: 200, margin: 20 }}
+      <View style={{ width, height }}>
+        <CameraShot
+          onCapture={handleCapture}
+          isPredicting={isPredicting}
+          isLoading={isLoading}
         />
+      </View>
+      {isLoading && <ActivityIndicator size="large" />}
+      <View style={styles.imageSelectOverlay}>
+        <ModelLoader onModelLoad={handleModelLoad} />
+        <ImageSelector
+          onImageSelect={handleImageSelect}
+          disabled={!model || isPredicting}
+        />
+      </View>
+      <ImagePreview imageUri={image} />
+      {image && !isPredicting && (
+        <View style={styles.overlay}>
+          <Pressable onPress={handlePredict}>
+            <Feather name="eye" size={100} color={"#fff"} />
+            <PredictionDisplay
+              prediction={prediction}
+              isPredicting={isPredicting}
+            />
+          </Pressable>
+        </View>
       )}
-      {isLoading && <ActivityIndicator />}
-      {isPredicting && <ActivityIndicator />}
-      {prediction && (
+      {isPredicting && (
+        <View style={styles.activityOverlay}>
+          <ActivityIndicator size="large" />
+          <Text style={styles.text}>Predicting...</Text>
+        </View>
+      )}
+            {prediction && (
         <>
           <Text style={styles.prediction}> Prediction is finished! </Text>
           <Pressable
@@ -192,20 +196,40 @@ export default function PredictionPage({ navigation }) {
       </Modal>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 16,
   },
   prediction: {
     fontSize: 18,
     marginVertical: 16,
   },
-
+  overlay: {
+    position: "absolute",
+    bottom: 200,
+    zIndex: 10,
+    width: "100%",
+    alignItems: "center",
+    padding: 20,
+  },
+  imageSelectOverlay: {
+    position: "absolute",
+    bottom: 50,
+    zIndex: 10,
+    width: "100%",
+    alignItems: "flex-end",
+    padding: 20,
+  },
+  activityOverlay: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    zIndex: 20,
+  },
   text: {
     fontSize: 18,
     textAlign: "center",
@@ -259,3 +283,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+export default PredictionPage;
