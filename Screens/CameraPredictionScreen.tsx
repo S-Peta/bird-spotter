@@ -121,12 +121,22 @@ const PredictionPage = ({ navigation }) => {
     [model]
   );
 
+  const handleDiscardImage = () => {
+    setImage(null);
+    setShowPreview(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {isLoading && <ActivityIndicator size="large" />}
       <View style={styles.contentContainer}>
         {image && showPreview ? (
-          <ImagePreview imageUri={image} />
+          <>
+            <Pressable style={styles.closeButton} onPress={handleDiscardImage}>
+              <Feather name="x-circle" size={32} color="#fff" />
+            </Pressable>
+            <ImagePreview imageUri={image} />
+          </>
         ) : (
           <CameraShot
             onCapture={handleCapture}
@@ -217,6 +227,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 20,
     backgroundColor: "#f0f0f0",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 20,
+    left: 20,
+    zIndex: 10,
   },
   predictButton: {
     flexDirection: "row",
