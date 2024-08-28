@@ -85,12 +85,7 @@ export default function CameraShot({ onCapture, isPredicting, isLoading }) {
           </View>
         </Camera>
       ) : (
-        <CameraPreview
-          photo={capturedImage}
-          savePhoto={savePhoto}
-          retakePicture={retakePicture}
-          isPredicting={isPredicting}
-        />
+        <CameraPreview photo={capturedImage} />
       )}
     </View>
   );
