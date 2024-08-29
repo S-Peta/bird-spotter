@@ -17,7 +17,6 @@ import * as FileSystem from "expo-file-system";
 import ModelLoader from "../Components/ModelLoader";
 import getBirdSpecies from "../utils/getBirdSpecies";
 getBirdSpecies;
-import ImageSelector from "../Components/ImageSelector";
 import ImagePreview from "../Components/ImagePreview";
 import CameraShot from "../Components/CameraShot";
 import {
@@ -131,31 +130,24 @@ const PredictionPage = ({ navigation }) => {
         </View>
       )}
       <View style={styles.contentContainer}>
-        {image && showPreview ? (
-          <>
-            <Pressable style={styles.closeButton} onPress={handleDiscardImage}>
-              <Feather name="x-circle" size={32} color="#fff" />
-            </Pressable>
-            <ImagePreview imageUri={image} />
-          </>
-        ) : (
+        {!image && (
           <CameraShot
             onCapture={handleCapture}
             isPredicting={isPredicting}
             isLoading={isLoading}
           />
         )}
+        {image && showPreview && (
+          <>
+            <Pressable style={styles.closeButton} onPress={handleDiscardImage}>
+              <Feather name="x-circle" size={32} color="#fff" />
+            </Pressable>
+            <ImagePreview imageUri={image} />
+          </>
+        )}
       </View>
       <View style={styles.controlsContainer}>
         <ModelLoader onModelLoad={handleModelLoad} />
-        {!image && (
-          <View style={styles.imageSelectorContainer}>
-            <ImageSelector
-              onImageSelect={handleImageSelect}
-              disabled={!model || isPredicting}
-            />
-          </View>
-        )}
         {image && !isPredicting && (
           <View>
             <Pressable onPress={handlePredict} style={styles.predictButton}>
@@ -240,14 +232,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "transparent",
+    backgroundColor: "black",
     zIndex: 1,
   },
   controlsContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "transparent",
+    backgroundColor: "black",
     zIndex: 2,
   },
   imageSelectorContainer: {
@@ -273,7 +265,7 @@ const styles = StyleSheet.create({
     width: 110,
     height: 110,
     backgroundColor: "rgba(255, 255, 255, 0.2)",
-    bottom: 10,
+    bottom: 60,
   },
   predictButtonText: {
     color: "#fff",
