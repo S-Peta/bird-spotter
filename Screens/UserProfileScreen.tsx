@@ -89,7 +89,7 @@ const UserProfileScreen = () => {
   }, [totalCaughtBirds]);
 
   function handlePress(species: string, url:string, scientificName: string) {
-    navigation.navigate('Single Bird', { species, url, scientificName})
+    navigation.navigate('Bird Page', { species, url, scientificName})
   }
 
   const goToRankingPage = () => {
@@ -223,7 +223,7 @@ const UserProfileScreen = () => {
                 <Image style={styles.birdImage} source={{ uri: item.url }} />
               </Pressable>
               )}
-            keyExtractor={(item) => item.species}
+              keyExtractor={(item, index) => `${item.species}-${index}`}
             showsHorizontalScrollIndicator={false}>
             </FlatList>
           </View>

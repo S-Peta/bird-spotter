@@ -8,7 +8,7 @@ export type RootStackParamList = {
     totalCaughtBirds: number;
     userId: string;
   };
-  "Single Bird": {
+  "Bird Page": {
     species: string;
     url: string;
     scientificName: string;

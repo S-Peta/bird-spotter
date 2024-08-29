@@ -17,7 +17,7 @@ import { getPageTitleAndId, getBirdSummary, getBirdSounds } from "../api";
 import { Asset } from "expo-asset";
 import { Audio } from "expo-av";
 import AntDesign from "@expo/vector-icons/AntDesign";
-type SingleBirdScreenRouteProp = RouteProp<RootStackParamList, "Single Bird">;
+type SingleBirdScreenRouteProp = RouteProp<RootStackParamList, "Bird Page">;
 
 const SingleBirdScreen = () => {
   const route = useRoute<SingleBirdScreenRouteProp>()
@@ -51,10 +51,10 @@ const SingleBirdScreen = () => {
     .then(({sound}) => {
       setBirdSound(sound)
     })
-    .catch((err) => {
-      console.log('Could not load bird sound: ', err)
-      Alert.alert('Error', 'Failed to load bird sound.')
-    })
+    // .catch((err) => {
+    //   console.log('Could not load bird sound: ', err)
+    //   Alert.alert('Error', 'Failed to load bird sound.')
+    // })
     .finally(() => {
       setIsLoading(false)
     })

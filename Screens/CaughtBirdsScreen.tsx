@@ -128,7 +128,7 @@ const CaughtBirdsScreen = ({ route }: { route: any }) => {
 
 
   function handlePress(species: string, url: string, scientificName: string, species_id: string) {
-    navigation.navigate("Single Bird", {
+    navigation.navigate("Bird Page", {
       species,
       url,
       scientificName,

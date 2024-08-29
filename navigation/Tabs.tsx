@@ -57,7 +57,7 @@ export default function Tabs() {
               <HomeStack.Screen name="Profile" component={UserProfileScreen} />
               <HomeStack.Screen name="Ranking" component={RankingScreen} />
               <HomeStack.Screen
-                name="Single Bird"
+                name="Bird Page"
                 component={SingleBirdScreen}
               />
             </HomeStack.Navigator>
@@ -114,7 +114,7 @@ export default function Tabs() {
                 component={CaughtBirdsScreen}
               />
               <HomeStack.Screen
-                name="Single Bird"
+                name="Bird Page"
                 component={SingleBirdScreen}
               />
             </HomeStack.Navigator>
