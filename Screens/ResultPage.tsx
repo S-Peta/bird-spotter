@@ -16,8 +16,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 import { getABirdImageUrl } from "../utils/getData";
 import { ScrollView } from "react-native-gesture-handler";
-import { Itim_400Regular } from "@expo-google-fonts/itim";
-import Constants from "expo-constants";
+
 
 const ResultPage = ({ route, navigation }) => {
   const [url, setUrl] = useState<string>("");
@@ -39,28 +38,30 @@ const ResultPage = ({ route, navigation }) => {
     getABirdImageUrl(predictedBird).then((imageUrl: any) => setUrl(imageUrl));
   }, []);
 
+
   return (
-    <View>
-      <SafeAreaView style={styles.screen}>
-        <ScrollView>
-          <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.cardContainer}>
+        <View style={styles.cardContent}>
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: url }} style={styles.image} />
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("Birds Collection");
+                navigation.navigate("Caught Birds");
               }}
               style={styles.closeButton}
             >
-              <AntDesign name="closecircleo" size={18} color="rblack" />
+              <AntDesign name="closecircleo" size={18} color="black" />
             </TouchableOpacity>
-            <Text style={styles.text}>{formatString(predictedBird)}</Text>
-            <Image source={{ uri: url }} style={styles.image} />
-            <Text style={styles.descriptionTitle}>Description</Text>
-            <Text style={styles.description}>{birdDescription}</Text>
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </View>
-  );
+          <Text style={styles.title}>{formatString(predictedBird)}</Text>
+          <ScrollView style={styles.descriptionContainer}>
+            <Text style={styles.description}>{birdDescription}</Text>
+          </ScrollView>
+        </View>
+      </View>
+    </SafeAreaView>
+  )
 };
 
 export default ResultPage;
@@ -68,67 +69,63 @@ export default ResultPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#f5f5f5',
     padding: 20,
-    margin: 20,
-    backgroundColor: "#c6dec1",
+  },
+  cardContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardContent: {
+    backgroundColor: '#c6dec1',
+    padding: 20,
     borderRadius: 15,
     elevation: 5,
     borderWidth: 10,
-    borderColor: "#729c7f",
-    shadowColor: "#000",
+    borderColor: '#729c7f',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
+    width: '90%',
+    height: '95%',
   },
-  text: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 20,
-    fontFamily: "Itim_400Regular",
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    alignSelf: "center",
+    fontFamily: 'Itim_400Regular',
+    marginVertical: 10,
   },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
+  imageContainer: {
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
+    marginVertical: 10,
+    position: 'relative',
   },
-  description: {
-    fontSize: 14,
-    marginTop: 10,
-  },
-  descriptionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 20,
-    fontFamily: "Itim_400Regular",
-  },
-
   image: {
-    width: "100%",
-    height: 300,
-    borderRadius: 8,
-  },
-  button: {
-    alignSelf: "flex-end",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    width: 100,
-    fontWeight: "bold",
-    textAlign: "center",
-    backgroundColor: "#729c7f",
-  },
-  scrollContainer: {
-    flexGrow: 1,
-    backgroundColor: "#f5f4e4",
-  },
-  screen: {
-    paddingTop: Constants.statusBarHeight,
+    width: '100%',
+    height: 250,
+    borderRadius: 5,
   },
   closeButton: {
-    borderRadius: 10,
-    alignSelf: "flex-end",
-    marginTop: 0,
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
+  },
+  descriptionContainer: {
+    maxHeight: 290,
+  },
+  description: {
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: 'center',
+    fontFamily: 'Itim_400Regular',
   },
 });

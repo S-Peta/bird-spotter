@@ -88,7 +88,7 @@ const SingleBirdScreen = () => {
       }
     }
   };
-  
+
   const toggleSound = () => {
     if (isPlaying) {
         stopSound();
@@ -131,7 +131,7 @@ const SingleBirdScreen = () => {
         </View>
       </View>
     </View>)
-  
+
 }
 
 export default SingleBirdScreen
@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     alignSelf: "center",
     fontFamily: 'Itim_400Regular',
+    marginVertical: 10,
   },
   imageContainer: {
     borderRadius: 5,
@@ -171,6 +172,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 5,
     marginVertical: 10,
+    position: 'relative',
   },
   image: {
     width: '100%',
