@@ -189,7 +189,7 @@ const UserProfileScreen = () => {
         />
       </Animated.View>
 
-      <Text style={styles.progressText}>{totalCaughtBirds}/{totalBirds} birds caught</Text>
+      <Text style={styles.progressText}>{totalCaughtBirds} birds caught</Text>
 
       <Text style={styles.title}>Overview</Text>
 
