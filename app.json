@@ -15,7 +15,11 @@
       "supportsTablet": true,
       "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
       "isAccessMediaLocationEnabled": true,
-      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera.",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to take photos of birds.",
+        "NSPhotoLibraryUsageDescription": "This app accesses your photos to let you upload them as caught birds."
+      }
     },
     "android": {
       "adaptiveIcon": {
