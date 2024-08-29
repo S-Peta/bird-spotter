@@ -5,6 +5,7 @@ import React, {
   Button,
   Dimensions,
   Image,
+  Alert,
 } from "react-native";
 import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -13,10 +14,34 @@ const { width, height } = Dimensions.get("window");
 
 export default function CameraShot({ onCapture, isPredicting, isLoading }) {
   const [capturedImage, setCapturedImage] = useState<any>(null);
+  const [hasCameraPermission, setHasCameraPermission] = useState<
+    boolean | null
+  >(null);
 
   useEffect(() => {
-    launchCamera();
+    async () => {
+      const cameraPermission = await requestCameraPermissions();
+      setHasCameraPermission(cameraPermission);
+
+      if (cameraPermission) {
+        launchCamera();
+      }
+    };
   }, []);
+
+  const requestCameraPermissions = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (status !== "granted") {
+      Alert.alert(
+        "Permissions required",
+        "Please grant camera and photo library permissions to use this feature.",
+        [{ text: "OK" }]
+      );
+      return false;
+    }
+    return true;
+  };
 
   const launchCamera = async () => {
     if (!isPredicting && !isLoading) {
