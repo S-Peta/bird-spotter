@@ -106,13 +106,12 @@ export default function Tabs() {
               );
             },
           }}
-          >
+        >
           {() => (
             <HomeStack.Navigator>
               <HomeStack.Screen
-                name="Caught Birds"
+                name="Birds Collection"
                 component={CaughtBirdsScreen}
-
               />
               <HomeStack.Screen
                 name="Single Bird"
@@ -120,7 +119,7 @@ export default function Tabs() {
               />
             </HomeStack.Navigator>
           )}
-          </Tab.Screen>
+        </Tab.Screen>
 
         {/* <Tab.Screen
           name="Guess Page"
@@ -136,7 +135,7 @@ export default function Tabs() {
                     color={focused ? "orange" : "black"}
                   />
                   {/* <Text style={{ fontSize: 12, color: "#162478" }}>Map</Text> */}
-                {/* </View>
+        {/* </View>
               );
             },
           }}
