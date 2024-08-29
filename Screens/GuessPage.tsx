@@ -27,7 +27,7 @@ const GuessPage = ({ route, navigation }: { route: any; navigation: any }) => {
 
   const onSubmit = () => {
     if (guessBird.trim() === predictedBird) {
-      setResult(`Yaay, You Correct! \n\n+10 Points`);
+      setResult(`Yaay, that's correct! \n\n+10 Points`);
       setModalVisible(true);
       setShowConfetti(true);
       updateUserTenPoints();
