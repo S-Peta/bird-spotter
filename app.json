@@ -15,8 +15,7 @@
       "supportsTablet": true,
       "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
       "isAccessMediaLocationEnabled": true,
-      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera.",
-      "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
     },
     "android": {
       "adaptiveIcon": {
@@ -30,6 +29,14 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you upload them as caught birds"
+        }
+      ]
+    ]
   }
 }
