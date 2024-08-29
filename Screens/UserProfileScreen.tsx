@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Alert, FlatList, Pressable, Animated, StyleSheet } from 'react-native';
 import { firebase_auth, db, storage } from '../index';
-import { getCaughtBirds, getCaughtBirdScientificName, getBirdsImageUrls, getStreaksForUser, getGuessesForUser, getPointsForUser } from '../utils/getData';
+import { getCaughtBirds, getCaughtBirdScientificName, getBirdsImageUrls, getStreaksForUser, getGuessesForUser, getPointsForUser, getUsername } from '../utils/getData';
 import { signOut, getAuth, updateProfile } from "firebase/auth";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { useContext } from 'react';
@@ -22,7 +22,7 @@ const UserProfileScreen = () => {
   const user = userAuth.currentUser!;
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const userUsername = user.email?.split('@')[0];
-  const formattedUsername = userUsername ? userUsername.charAt(0).toUpperCase() + userUsername.slice(1) : 'User';
+  const [formattedUsername, setFormattedUsername] = useState('User');
 
   const defaultUser = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCFoiI5GIjAzBXk4FCP0PhikiWkT5cbBQi492KoVj6hXm1W2zppE3hBQ6fdL07Wv-PYjU&usqp=CAU';
 
@@ -36,6 +36,7 @@ const UserProfileScreen = () => {
   const [daysStreak, setDaysStreak] = useState(0);
   const [correctGuesses, setCorrectGuesses] = useState(0);
   const [animatedProgress] = useState(new Animated.Value(0));
+
 
   const totalBirds = 521;
 
@@ -53,6 +54,9 @@ const UserProfileScreen = () => {
     async function getImages() {
       if (user) {
         try {
+          const username = await getUsername(user.uid);
+          setFormattedUsername(username || 'User');
+
           const caughtBirds = await getCaughtBirds(user.uid);
           setTotalCaughtBirds(caughtBirds.length);
 
@@ -89,7 +93,7 @@ const UserProfileScreen = () => {
   }
 
   const goToRankingPage = () => {
-    navigation.navigate('Ranking');
+    navigation.navigate('Ranking', { currentUser: formattedUsername });
   };
 
   const pickImage = async () => {
@@ -175,10 +179,13 @@ const UserProfileScreen = () => {
         <Progress.Bar
           progress={progress}
           width={300}
-          color="#b1b3b5"
+          color="#729c7f"
+          unfilledColor="#D3D3D3"
           borderRadius={10}
           height={15}
           animated
+          borderWidth={0} 
+          useNativeDriver={true}
         />
       </Animated.View>
 
