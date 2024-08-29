@@ -15,7 +15,8 @@
       "supportsTablet": true,
       "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
       "isAccessMediaLocationEnabled": true,
-      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera.",
+      "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
     },
     "android": {
       "adaptiveIcon": {
@@ -29,8 +30,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-font"
-    ]
+    "plugins": ["expo-font"]
   }
 }
