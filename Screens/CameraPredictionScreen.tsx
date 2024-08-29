@@ -44,10 +44,8 @@ const PredictionPage = ({ navigation }) => {
     if (prediction) {
       setModalVisible(true);
       postCaughtBird(prediction, location.latitude, location.longitude);
-      setModalVisible(true);
-      postCaughtBird(prediction, latitude, longitude);
     }
-  }, [prediction, location]);
+  }, [prediction]);
 
   const handleModelLoad = (loadedModel) => {
     setModel(loadedModel);
@@ -174,7 +172,7 @@ const PredictionPage = ({ navigation }) => {
         <View style={styles.activityOverlay}>
           <ActivityIndicator size="large" />
           <Text style={styles.text}>Capturing the bird...</Text>
-            <Text style={styles.text}>Please hold on!</Text>
+          <Text style={styles.text}>Please hold on!</Text>
         </View>
       )}
       <Modal
@@ -188,34 +186,36 @@ const PredictionPage = ({ navigation }) => {
         <View style={styles.modalBackground}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>You captured a bird! </Text>
-            <Text style={styles.modalText}>Would you like to try guessing its species?</Text>
+            <Text style={styles.modalText}>
+              Would you like to try guessing its species?
+            </Text>
             <View style={styles.buttonRow}>
-            <Pressable
-              style={[styles.iconButton, styles.redButton]}
-              onPress={() => {
-                setModalVisible(!modalVisible);
-                navigation.navigate("Result Page", {
-                  predictedBird: prediction,
-                });
-                updateUserTwentyPoints();
-              }}
-            >
-              <Feather name="x" size={32} color="#fff" />
+              <Pressable
+                style={[styles.iconButton, styles.redButton]}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                  navigation.navigate("Result Page", {
+                    predictedBird: prediction,
+                  });
+                  updateUserTwentyPoints();
+                }}
+              >
+                <Feather name="x" size={32} color="#fff" />
               </Pressable>
               <Pressable
-              style={[styles.iconButton, styles.greenButton]}
-              onPress={() => {
-                setModalVisible(!modalVisible);
-                navigation.navigate("Guess Page", {
-                  predictedBird: prediction,
-                  imageUrl: image,
-                });
-                setImage(null);
-                updateUserTwentyPoints();
-              }}
-            >
-              <Feather name="check" size={32} color="#fff" />
-            </Pressable>
+                style={[styles.iconButton, styles.greenButton]}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                  navigation.navigate("Guess Page", {
+                    predictedBird: prediction,
+                    imageUrl: image,
+                  });
+                  setImage(null);
+                  updateUserTwentyPoints();
+                }}
+              >
+                <Feather name="check" size={32} color="#fff" />
+              </Pressable>
             </View>
           </View>
         </View>
@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     shadowColor: "#000",
     borderWidth: 10,
-    borderColor: '#729c7f',
+    borderColor: "#729c7f",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -344,6 +344,13 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     zIndex: 40,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    paddingHorizontal: 20,
+    elevation: 2,
+    margin: 5,
   },
   buttonOpen: {
     backgroundColor: "#729c7f",
@@ -363,11 +370,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 20,
-    width: '60%',
+    width: "60%",
   },
   iconButton: {
     backgroundColor: "#729c7f",
@@ -381,7 +388,7 @@ const styles = StyleSheet.create({
   },
   greenButton: {
     backgroundColor: "#44a662",
-  }
+  },
 });
 
 export default PredictionPage;
