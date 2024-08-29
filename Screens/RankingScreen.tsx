@@ -3,13 +3,14 @@ import { View, Text, ScrollView, StyleSheet, Image, ActivityIndicator } from 're
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { getUsers } from '../utils/getData';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useFonts, Itim_400Regular } from '@expo-google-fonts/itim';
-const RankingScreen = () => {
+
+
+const RankingScreen = ({ route }) => {
+  const { currentUser } = route.params;
   const [users, setUsers] = useState<
   { avatar: string; points: number, username: string}[]
 >([])
   const [loading, setLoading] = useState(true);
-  const currentUser = 'currentUsername';
   const defaultAvatar = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCFoiI5GIjAzBXk4FCP0PhikiWkT5cbBQi492KoVj6hXm1W2zppE3hBQ6fdL07Wv-PYjU&usqp=CAU';
 
   useEffect(() => {
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
   },
   currentUserCard: {
     borderWidth: 6,
-    borderColor: 'black',
+    borderColor: 'orange',
   },
   avatar: {
     width: 50,

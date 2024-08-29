@@ -12,21 +12,43 @@ import CaughtBirdsScreen from "./Screens/CaughtBirdsScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SingleBirdScreen from "./Screens/SingleBirdScreen";
 import { RootStackParamList } from "./types";
+import * as Font from "expo-font";
+import { Text } from "react-native";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const InsideStack = createNativeStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
   useEffect(() => {
     onAuthStateChanged(firebase_auth, (user) => {
       setUser(user);
     });
+
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        Itim_400Regular: require("@expo-google-fonts/itim/Itim_400Regular.ttf"),
+      });
+      setFontsLoaded(true);
+    };
+
+    loadFonts();
   }, []);
+
+  Text.defaultProps = Text.defaultProps || {};
+  Text.defaultProps.style = { fontFamily: "Itim_400Regular" };
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator initialRouteName="Login"
+          screenOptions={{
+          headerTitleStyle: {
+            fontFamily: "Itim_400Regular",
+          },
+        }}
+        >
           {user ? (
             <Stack.Screen
               name="Main"
