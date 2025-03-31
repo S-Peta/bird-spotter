@@ -2,6 +2,8 @@
 
 Bird Spotter is an iOS & Android app built that allows users to capture or upload bird images, analyze their species using machine learning, collect them and locate birds other users have spotted.
 
+[Project Page Link](https://northcoders.com/project-phase/bird-spotter)
+
 ## Features
 
 - **Capture or Upload Images**: Users can take a photo using the camera or select an existing image from their gallery.
