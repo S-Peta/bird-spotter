@@ -20,7 +20,7 @@ Bird Spotter is an iOS & Android app built that allows users to capture or uploa
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/yourusername/bird-spotter.git
+   git clone https://github.com/S-Peta/bird-spotter.git
    cd bird-spotter
    ```
 
